@@ -1,0 +1,20 @@
+server:
+  port: 8761
+spring:
+  application:
+    name: eureka-server
+eureka:
+  client:
+    registerWithEureka: false
+    fetchRegistry: false
+info:
+  app.:
+    name: Spring Service Registery
+    description: This is Spring Service Registery example application.
+    version: 1.0.0
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: info, metrics, health
