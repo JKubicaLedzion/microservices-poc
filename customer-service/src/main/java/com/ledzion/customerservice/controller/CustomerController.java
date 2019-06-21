@@ -36,19 +36,17 @@ public class CustomerController {
     public ResponseEntity getCustomerById(@PathVariable("id") long id) {
         LOGGER.debug("Getting customer with id {}.", id);
         Optional<Customer> customer = customerService.getCustomerById(id);
-        if (customer.isPresent()) {
-                return ResponseEntity.status(HttpStatus.OK).body(customer.get());
-        }
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(CUSTOMER_NOT_FOUND);
+        return customer.isPresent()
+                ? ResponseEntity.status(HttpStatus.OK).body(customer.get())
+                : ResponseEntity.status(HttpStatus.NOT_FOUND).body(CUSTOMER_NOT_FOUND);
     }
 
     @RequestMapping(method = GET, produces = APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity getAllCustomers() {
         LOGGER.debug("Getting all customers.");
         List<Customer> customers = customerService.getAllCustomers();
-        if (customers.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(CUSTOMER_NOT_FOUND);
-        }
-        return ResponseEntity.status(HttpStatus.OK).body(customers);
+        return customers.isEmpty()
+                ? ResponseEntity.status(HttpStatus.NOT_FOUND).body(CUSTOMER_NOT_FOUND)
+                : ResponseEntity.status(HttpStatus.OK).body(customers);
     }
 }
