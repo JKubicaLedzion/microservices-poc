@@ -1,8 +1,7 @@
 package com.ledzion.bicycleservice.model;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 public class Bicycle {
@@ -10,13 +9,13 @@ public class Bicycle {
     private long id;
     private Type type;
     private Size size;
-    private List<LocalDate> rentalDates;
+    private Map<String, BookingPeriod> bookings;
 
     public Bicycle(long id, Type type, Size size) {
         this.id = id;
         this.type = type;
         this.size = size;
-        this.rentalDates = new ArrayList<>();
+        this.bookings = new HashMap<>();
     }
 
     public long getId() {
@@ -43,28 +42,27 @@ public class Bicycle {
         this.size = size;
     }
 
-    public List<LocalDate> getRentalDates() {
-        return rentalDates;
+    public Map<String, BookingPeriod> getBookings() {
+        return bookings;
     }
 
-    public void setRentalDates(List<LocalDate> rentalDates) {
-        this.rentalDates = rentalDates;
+    public void setBookings(Map<String, BookingPeriod> bookings ) {
+        this.bookings = bookings;
     }
 
-    @Override
-    public boolean equals(Object o) {
+    @Override public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Bicycle bicycle = (Bicycle) o;
         return id == bicycle.id &&
                 type == bicycle.type &&
                 size == bicycle.size &&
-                Objects.equals(rentalDates, bicycle.rentalDates);
+                Objects.equals( bookings, bicycle.bookings );
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, type, size, rentalDates);
+        return Objects.hash(id, type, size, bookings );
     }
 
     @Override
@@ -73,7 +71,7 @@ public class Bicycle {
                 "id=" + id +
                 ", typeDescription=" + type +
                 ", size=" + size +
-                ", rentalDates=" + rentalDates +
+                ", bookings=" + bookings +
                 '}';
     }
 }

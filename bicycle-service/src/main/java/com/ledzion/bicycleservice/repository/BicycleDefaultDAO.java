@@ -1,35 +1,41 @@
 package com.ledzion.bicycleservice.repository;
 
 import com.ledzion.bicycleservice.model.Bicycle;
+import com.ledzion.bicycleservice.model.BookingPeriod;
 import com.ledzion.bicycleservice.model.Size;
 import com.ledzion.bicycleservice.model.Type;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
 @Repository
 public class BicycleDefaultDAO implements BicycleDAO {
 
+    private List<Bicycle> bicycles = new ArrayList<>(Arrays.asList(
+            new Bicycle(1, Type.CITY, Size.S ),
+            new Bicycle(1, Type.CROSS, Size.M ),
+            new Bicycle(1, Type.CITY, Size.M )
+    ));
+
     @Override
     public Optional<Bicycle> getBicycleById(long id) {
-        return Optional.of(new Bicycle(1, Type.CITY, Size.S ));
+        return getAllBicycles().stream()
+                .filter(b -> b.getId() == id)
+                .findFirst();
     }
 
     @Override
     public List<Bicycle> getAllBicycles() {
-        return new ArrayList<>(Arrays.asList(
-                new Bicycle(1, Type.CITY, Size.S ),
-                new Bicycle(1, Type.CROSS, Size.M ),
-                new Bicycle(1, Type.CITY, Size.M )
-        ));
+        return bicycles;
     }
 
     @Override
     public List<Bicycle> getBicyclesByType(String type, String size) {
         return getAllBicycles().stream()
-                .filter(b -> Type.getType(type).equals(b.getType()))
-                .filter(b -> Objects.nonNull(size) && Type.getType(type).equals(b.getType()))
+                .filter(b -> Objects.isNull(type) || Type.getType(type).equals(b.getType()))
+                .filter(b -> Objects.isNull(size) || Size.getSize(size).equals(b.getSize()))
                 .collect(Collectors.toList());
     }
 
@@ -38,5 +44,19 @@ public class BicycleDefaultDAO implements BicycleDAO {
                 .filter(b -> types.contains(b.getType().getTypeDescription()))
                 .filter(b -> sizes.contains(b.getSize().getSizeDescription()))
                 .collect(Collectors.toList());
+    }
+
+    public boolean bookBicycle(String userId, String type, String size, LocalDate startDate, LocalDate endDate) {
+        //todo: what if not found
+        Bicycle bicycle = getBicyclesByType(type, size).get(0);
+        List<BookingPeriod> bookings = bicycle.getBookings().values().stream()
+                .filter(b -> b.containsDate(startDate) || b.containsDate(endDate))
+                .collect(Collectors.toList());
+        if(!bookings.isEmpty()) {
+            return false;
+        }
+        BookingPeriod bookingPeriod = new BookingPeriod(startDate, endDate);
+        bicycle.getBookings().put(userId, bookingPeriod);
+        return true;
     }
 }
