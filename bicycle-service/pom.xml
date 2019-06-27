@@ -9,9 +9,9 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.ledzion</groupId>
-	<artifactId>customer-service</artifactId>
+	<artifactId>bicycle-service</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>customer-service</name>
+	<name>bicycle-service</name>
 
 	<properties>
 		<java.version>1.8</java.version>

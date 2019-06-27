@@ -1,4 +1,4 @@
-package com.ledzion.customerservice;
+package com.ledzion.bicycleservice;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -10,9 +10,9 @@ import org.springframework.cloud.netflix.hystrix.dashboard.EnableHystrixDashboar
 @EnableHystrixDashboard
 @EnableCircuitBreaker
 @EnableEurekaClient
-public class CustomerServiceApplication {
+public class BicycleServiceApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(CustomerServiceApplication.class, args);
+		SpringApplication.run(BicycleServiceApplication.class, args);
 	}
 }
