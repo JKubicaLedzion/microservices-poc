@@ -1,4 +1,4 @@
-package com.ledzion.customerservice.model;
+package com.ledzion.bicycleservice.model;
 
 import java.time.LocalDate;
 import java.util.ArrayList;

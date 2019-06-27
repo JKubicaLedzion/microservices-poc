@@ -1,6 +1,6 @@
-package com.ledzion.customerservice.repository;
+package com.ledzion.bicycleservice.repository;
 
-import com.ledzion.customerservice.model.Bicycle;
+import com.ledzion.bicycleservice.model.Bicycle;
 
 import java.util.List;
 import java.util.Optional;

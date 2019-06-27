@@ -1,8 +1,8 @@
-package com.ledzion.customerservice.repository;
+package com.ledzion.bicycleservice.repository;
 
-import com.ledzion.customerservice.model.Bicycle;
-import com.ledzion.customerservice.model.Size;
-import com.ledzion.customerservice.model.Type;
+import com.ledzion.bicycleservice.model.Bicycle;
+import com.ledzion.bicycleservice.model.Size;
+import com.ledzion.bicycleservice.model.Type;
 import org.springframework.stereotype.Repository;
 
 import java.util.*;

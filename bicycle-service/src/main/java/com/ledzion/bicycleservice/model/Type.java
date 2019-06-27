@@ -1,6 +1,5 @@
-package com.ledzion.customerservice.model;
+package com.ledzion.bicycleservice.model;
 
-import java.util.Arrays;
 import java.util.NoSuchElementException;
 
 public enum Type {

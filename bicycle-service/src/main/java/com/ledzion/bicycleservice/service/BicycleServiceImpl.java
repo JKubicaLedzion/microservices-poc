@@ -1,7 +1,7 @@
-package com.ledzion.customerservice.service;
+package com.ledzion.bicycleservice.service;
 
-import com.ledzion.customerservice.model.Bicycle;
-import com.ledzion.customerservice.repository.BicycleDAO;
+import com.ledzion.bicycleservice.model.Bicycle;
+import com.ledzion.bicycleservice.repository.BicycleDAO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
