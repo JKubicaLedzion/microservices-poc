@@ -18,7 +18,7 @@ public enum Size {
         return sizeDescription;
     }
 
-    public Size getSize(String sizeDescription) {
+    public static Size getSize(String sizeDescription) {
         return Arrays.stream(Size.values())
                 .filter(s -> sizeDescription.equals(s.getSizeDescription()))
                 .findAny()

@@ -1,5 +1,6 @@
 package com.ledzion.bicycleservice.model;
 
+import java.util.Arrays;
 import java.util.NoSuchElementException;
 
 public enum Type {
@@ -22,17 +23,9 @@ public enum Type {
     }
 
     public static Type getType(String typeDescription) {
-        for(Type type : Type.values()) {
-            if (typeDescription.equals(type.getTypeDescription())) {
-                return type;
-            }
-        }
-        throw new NoSuchElementException("Wrong type rate provided.");
-
-
-//        return Arrays.stream(Type.values())
-//                .filter(t -> typeDescription.equals(t.getTypeDescription()))
-//                .findAny()
-//                .orElseThrow(() -> new NoSuchElementException("Wrong type rate provided."));
+        return Arrays.stream(Type.values())
+                .filter(t -> typeDescription.equals(t.getTypeDescription()))
+                .findAny()
+                .orElseThrow(() -> new NoSuchElementException("Wrong type rate provided."));
     }
 }

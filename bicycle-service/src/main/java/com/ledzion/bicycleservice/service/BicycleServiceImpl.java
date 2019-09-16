@@ -5,6 +5,7 @@ import com.ledzion.bicycleservice.repository.BicycleDAO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,8 +30,13 @@ public class BicycleServiceImpl implements BicycleService {
     }
 
     @Override
-    public List<Bicycle> getBicyclesByType(String type, String size) {
-        return bicycleDAO.getBicyclesByType(type, size);
+    public List<Bicycle> getBicyclesByTypeSize(String type, String size) {
+        return bicycleDAO.getBicyclesByTypeSize(type, size);
+    }
+
+    @Override
+    public List<Bicycle> getBicyclesByTypeSize2(List<String> types, List<String> sizes) {
+        return bicycleDAO.getBicyclesByTypeSize2(types, sizes);
     }
 
     public BicycleDAO getBicycleDAO() {
@@ -39,5 +45,10 @@ public class BicycleServiceImpl implements BicycleService {
 
     public void setBicycleDAO(BicycleDAO bicycleDAO) {
         this.bicycleDAO = bicycleDAO;
+    }
+
+    @Override public boolean bookBicycle(String userId, String type, String size, LocalDate startDate,
+            LocalDate endDate) {
+        return bicycleDAO.bookBicycle(userId, type, size, startDate, endDate);
     }
 }

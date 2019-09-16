@@ -63,7 +63,7 @@ public class CustomerController {
     }
 
     @SuppressWarnings("unused")
-    public ResponseEntity getAllCustomersFallback(@PathVariable("id") long id) {
+    public ResponseEntity getAllCustomersFallback() {
         return ResponseEntity.ok().body( SERVICE_UNAVAILABLE_ERROR_MESSAGE );
     }
 }
