@@ -10,6 +10,7 @@ public class Bicycle {
     private Type type;
     private Size size;
     private Map<String, BookingPeriod> bookings;
+    //rebase abc
 
     public Bicycle(long id, Type type, Size size) {
         this.id = id;
