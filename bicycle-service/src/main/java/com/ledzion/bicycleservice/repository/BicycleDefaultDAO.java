@@ -28,21 +28,30 @@ public class BicycleDefaultDAO implements BicycleDAO {
 
     @Override
     public List<Bicycle> getAllBicycles() {
+<<<<<<< Updated upstream
         return bicycles;
+=======
+        return new ArrayList<>(Arrays.asList(
+                new Bicycle(1, Type.CITY, Size.S ),
+                new Bicycle(2, Type.CROSS, Size.M ),
+                new Bicycle(3, Type.CITY, Size.M ),
+                new Bicycle(4, Type.MOUNTAIN, Size.M )
+        ));
+>>>>>>> Stashed changes
     }
 
     @Override
-    public List<Bicycle> getBicyclesByType(String type, String size) {
+    public List<Bicycle> getBicyclesByTypeSize(String type, String size) {
         return getAllBicycles().stream()
                 .filter(b -> Objects.isNull(type) || Type.getType(type).equals(b.getType()))
                 .filter(b -> Objects.isNull(size) || Size.getSize(size).equals(b.getSize()))
                 .collect(Collectors.toList());
     }
 
-    public List<Bicycle> getBicyclesByType2(List<String> types, List<String> sizes) {
+    public List<Bicycle> getBicyclesByTypeSize2(List<String> types, List<String> sizes) {
         return getAllBicycles().stream()
-                .filter(b -> types.contains(b.getType().getTypeDescription()))
-                .filter(b -> sizes.contains(b.getSize().getSizeDescription()))
+                .filter(b -> Objects.isNull(types) || types.contains(b.getType().getTypeDescription()))
+                .filter(b -> Objects.isNull(sizes) || sizes.contains(b.getSize().getSizeDescription()))
                 .collect(Collectors.toList());
     }
 

@@ -12,7 +12,13 @@ public interface BicycleService {
 
     List<Bicycle> getAllBicycles();
 
+<<<<<<< Updated upstream
     List<Bicycle> getBicyclesByType(String type, String size);
 
     boolean bookBicycle(String userId, String type, String size, LocalDate startDate, LocalDate endDate);
+=======
+    List<Bicycle> getBicyclesByTypeSize(String type, String size);
+
+    List<Bicycle> getBicyclesByTypeSize2(List<String> type, List<String> size);
+>>>>>>> Stashed changes
 }
