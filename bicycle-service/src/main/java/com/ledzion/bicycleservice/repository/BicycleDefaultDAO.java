@@ -28,16 +28,12 @@ public class BicycleDefaultDAO implements BicycleDAO {
 
     @Override
     public List<Bicycle> getAllBicycles() {
-<<<<<<< Updated upstream
-        return bicycles;
-=======
         return new ArrayList<>(Arrays.asList(
                 new Bicycle(1, Type.CITY, Size.S ),
                 new Bicycle(2, Type.CROSS, Size.M ),
                 new Bicycle(3, Type.CITY, Size.M ),
                 new Bicycle(4, Type.MOUNTAIN, Size.M )
         ));
->>>>>>> Stashed changes
     }
 
     @Override
@@ -57,7 +53,7 @@ public class BicycleDefaultDAO implements BicycleDAO {
 
     public boolean bookBicycle(String userId, String type, String size, LocalDate startDate, LocalDate endDate) {
         //todo: what if not found
-        Bicycle bicycle = getBicyclesByType(type, size).get(0);
+        Bicycle bicycle = getBicyclesByTypeSize(type, size).get(0);
         List<BookingPeriod> bookings = bicycle.getBookings().values().stream()
                 .filter(b -> b.containsDate(startDate) || b.containsDate(endDate))
                 .collect(Collectors.toList());

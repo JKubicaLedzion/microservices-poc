@@ -67,12 +67,8 @@ public class BicycleController {
 
     @HystrixCommand(fallbackMethod = "getBicyclesByTypeSizeFallback")
     @GetMapping(value = "filter", produces = APPLICATION_JSON_UTF8_VALUE)
-<<<<<<< Updated upstream
-    public ResponseEntity getBicyclesByType(@RequestParam(name = "type", required = false) String type,
-=======
     public ResponseEntity getBicyclesByTypeSize(@RequestParam(name = "type", required = false) String type,
->>>>>>> Stashed changes
-                                            @RequestParam(name = "size", required = false) String size) {
+                                                @RequestParam(name = "size", required = false) String size) {
         LOGGER.debug("Getting bicycles of type {} and size {}.", type, size);
         List<Bicycle> bicycles = bicycleService.getBicyclesByTypeSize(type, size);
         return bicycles.isEmpty()
@@ -121,13 +117,8 @@ public class BicycleController {
     }
 
     @SuppressWarnings("unused")
-<<<<<<< Updated upstream
-    public ResponseEntity bookBicycleFallback(@RequestParam(name = "type") String type,
-            @RequestParam(name = "size", required = false) String size) {
-=======
     public ResponseEntity getBicyclesByTypeSizeFallback2(@RequestParam(name = "type") List<String> type,
             @RequestParam(name = "size", required = false) List<String> size) {
->>>>>>> Stashed changes
         return ResponseEntity.ok().body( SERVICE_UNAVAILABLE_ERROR_MESSAGE );
     }
 }
