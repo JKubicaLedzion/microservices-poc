@@ -1,8 +1,8 @@
 package com.ledzion.customerservice.repository;
 
 import com.ledzion.customerservice.model.Customer;
-import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,5 +17,10 @@ public class CustomerMongoDbDAO implements CustomerDAO {
     @Override
     public List<Customer> getAllCustomers() {
         return null;
+    }
+
+    @Override
+    public boolean addBooking(long userId, long bicycleId, LocalDate startDate, LocalDate endDate) {
+        return false;
     }
 }

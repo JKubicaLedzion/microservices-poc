@@ -47,7 +47,8 @@ public class BicycleServiceImpl implements BicycleService {
         this.bicycleDAO = bicycleDAO;
     }
 
-    @Override public boolean bookBicycle(String userId, String type, String size, LocalDate startDate,
+    @Override
+    public boolean bookBicycle(long userId, String type, String size, LocalDate startDate,
             LocalDate endDate) {
         return bicycleDAO.bookBicycle(userId, type, size, startDate, endDate);
     }

@@ -1,5 +1,7 @@
 package com.ledzion.customerservice.model;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 public class Customer {
@@ -9,6 +11,7 @@ public class Customer {
     private String phone;
     private String email;
     private Address address;
+    private Map<Long, BookingPeriod> bookings;
 
     public Customer(long id, String name, String phone, String email, Address address) {
         this.id = id;
@@ -16,6 +19,7 @@ public class Customer {
         this.phone = phone;
         this.email = email;
         this.address = address;
+        bookings = new HashMap<>();
     }
 
     public long getId() {
@@ -58,31 +62,38 @@ public class Customer {
         this.address = address;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+    public Map<Long,BookingPeriod> getBookings() {
+        return bookings;
+    }
+
+    public void setBookings( Map<Long,BookingPeriod> bookings ) {
+        this.bookings = bookings;
+    }
+
+    @Override public boolean equals( Object o ) {
+        if ( this == o )
+            return true;
+        if ( o == null || getClass() != o.getClass() )
+            return false;
         Customer customer = (Customer) o;
-        return id == customer.id &&
-                Objects.equals(name, customer.name) &&
-                Objects.equals(phone, customer.phone) &&
-                Objects.equals(email, customer.email) &&
-                Objects.equals(address, customer.address);
+        return id == customer.id && Objects.equals( name, customer.name ) && Objects.equals( phone, customer.phone )
+                && Objects.equals( email, customer.email ) && Objects.equals( address, customer.address ) && Objects
+                .equals( bookings, customer.bookings );
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, name, phone, email, address);
+    @Override public int hashCode() {
+        return Objects.hash( id, name, phone, email, address, bookings );
     }
 
-    @Override
-    public String toString() {
+    @Override public String toString()
+    {
         return "Customer{" +
                 "id=" + id +
-                ", name='" + name + '\'' +
-                ", phone='" + phone + '\'' +
-                ", email='" + email + '\'' +
+                ", name='" + name +
+                ", phone='" + phone +
+                ", email='" + email +
                 ", address=" + address +
+                ", bookings=" + bookings +
                 '}';
     }
 }

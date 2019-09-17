@@ -65,8 +65,9 @@ public class BicycleController {
 
     @HystrixCommand(fallbackMethod = "getBicyclesByTypeSizeFallback")
     @GetMapping(value = "filter")
-    public ResponseEntity getBicyclesByTypeSize(@RequestParam(name = "type", required = false) String type,
-                                                @RequestParam(name = "size", required = false) String size) {
+    public ResponseEntity getBicyclesByTypeSize(
+            @RequestParam(name = "type", required = false) String type,
+            @RequestParam(name = "size", required = false) String size) {
         LOGGER.debug("Getting bicycles of type {} and size {}.", type, size);
         List<Bicycle> bicycles = bicycleService.getBicyclesByTypeSize(type, size);
         return bicycles.isEmpty()
@@ -76,7 +77,8 @@ public class BicycleController {
 
     @HystrixCommand(fallbackMethod = "getBicyclesByTypeSizeFallback2")
     @GetMapping(value = "multi-filter")
-    public ResponseEntity getBicyclesByTypeSize2(@RequestParam(name = "type", required = false) List<String> types,
+    public ResponseEntity getBicyclesByTypeSize2(
+            @RequestParam(name = "type", required = false) List<String> types,
             @RequestParam(name = "size", required = false) List<String> sizes) {
         LOGGER.debug("Getting bicycles of type {} and size {}.", types, sizes);
         List<Bicycle> bicycles = bicycleService.getBicyclesByTypeSize2(types, sizes);
@@ -87,7 +89,8 @@ public class BicycleController {
 
     @HystrixCommand(fallbackMethod = "bookBicycleFallback")
     @PostMapping
-    public ResponseEntity bookBicycle(@RequestParam(name = "userId") String userId,
+    public ResponseEntity bookBicycle(
+            @RequestParam(name = "userId") long userId,
             @RequestParam(name = "type", required = false) String type,
             @RequestParam(name = "size", required = false) String size,
             @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) @RequestParam(name = "startDate") LocalDate startDate,
