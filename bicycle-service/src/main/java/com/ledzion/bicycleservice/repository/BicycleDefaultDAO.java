@@ -51,7 +51,8 @@ public class BicycleDefaultDAO implements BicycleDAO {
                 .collect(Collectors.toList());
     }
 
-    public boolean bookBicycle(String userId, String type, String size, LocalDate startDate, LocalDate endDate) {
+    @Override
+    public boolean bookBicycle(long userId, String type, String size, LocalDate startDate, LocalDate endDate) {
         //todo: add specific error
         Bicycle bicycle = getBicyclesByTypeSize(type, size).get(0);
         if(Objects.isNull(bicycle)) {

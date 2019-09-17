@@ -12,7 +12,7 @@ public interface BicycleService {
 
     List<Bicycle> getAllBicycles();
 
-    boolean bookBicycle(String userId, String type, String size, LocalDate startDate, LocalDate endDate);
+    boolean bookBicycle(long userId, String type, String size, LocalDate startDate, LocalDate endDate);
 
     List<Bicycle> getBicyclesByTypeSize(String type, String size);
 

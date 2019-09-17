@@ -5,6 +5,7 @@ import com.ledzion.customerservice.repository.CustomerDAO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -34,5 +35,10 @@ public class CustomerServiceImpl implements CustomerService {
 
     public void setCustomerDAO(CustomerDAO customerDAO) {
         this.customerDAO = customerDAO;
+    }
+
+    @Override
+    public boolean addBooking(long userId, long bicycleId, LocalDate startDate, LocalDate endDate) {
+        return customerDAO.addBooking(userId, bicycleId, startDate, endDate);
     }
 }

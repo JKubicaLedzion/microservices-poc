@@ -9,7 +9,7 @@ public class Bicycle {
     private long id;
     private Type type;
     private Size size;
-    private Map<String, BookingPeriod> bookings;
+    private Map<Long, BookingPeriod> bookings;
     //xyz
 
     public Bicycle(long id, Type type, Size size) {
@@ -43,11 +43,11 @@ public class Bicycle {
         this.size = size;
     }
 
-    public Map<String, BookingPeriod> getBookings() {
+    public Map<Long, BookingPeriod> getBookings() {
         return bookings;
     }
 
-    public void setBookings(Map<String, BookingPeriod> bookings ) {
+    public void setBookings(Map<Long, BookingPeriod> bookings ) {
         this.bookings = bookings;
     }
 

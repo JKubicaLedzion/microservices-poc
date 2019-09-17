@@ -24,12 +24,14 @@ public class BicycleMongoDbDAO implements BicycleDAO {
         return null;
     }
 
-    @Override public List<Bicycle> getBicyclesByTypeSize2( List<String> type, List<String> size )
+    @Override
+    public List<Bicycle> getBicyclesByTypeSize2( List<String> type, List<String> size )
     {
         return null;
     }
 
-    @Override public boolean bookBicycle(String userId, String type, String size, LocalDate startDate,
+    @Override
+    public boolean bookBicycle(long userId, String type, String size, LocalDate startDate,
             LocalDate endDate) {
         return false;
     }

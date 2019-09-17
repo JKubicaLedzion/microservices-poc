@@ -6,18 +6,19 @@ import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
-
-import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE;
-import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
 @RestController
 @RequestMapping("/customers")
@@ -25,7 +26,11 @@ public class CustomerController {
 
     private final Logger LOGGER = LoggerFactory.getLogger(CustomerController.class);
 
+    private static final String BOOKING_ADDED = "Bicycle booking added.";
+
     private static final String CUSTOMER_NOT_FOUND = "Customer not found.";
+
+    private static final String ERROR_WHILE_ADDING_BOOKING = "Error while adding bicycle booking. Provided data incorrect.";
 
     private static final String SERVICE_UNAVAILABLE_ERROR_MESSAGE =
             "No Response From Customer Service at this moment. " + " Service will be back shortly.";
@@ -38,7 +43,7 @@ public class CustomerController {
     }
 
     @HystrixCommand(fallbackMethod = "getCustomerByIdFallback")
-    @GetMapping(value = "/{id}", produces = APPLICATION_JSON_UTF8_VALUE)
+    @GetMapping(value = "/{id}")
     public ResponseEntity getCustomerById(@PathVariable("id") long id) {
         LOGGER.debug("Getting customer with id {}.", id);
         Optional<Customer> customer = customerService.getCustomerById(id);
@@ -48,13 +53,27 @@ public class CustomerController {
     }
 
     @HystrixCommand(fallbackMethod = "getAllCustomersFallback")
-    @GetMapping(produces = APPLICATION_JSON_UTF8_VALUE)
+    @GetMapping
     public ResponseEntity getAllCustomers() {
         LOGGER.debug("Getting all customers.");
         List<Customer> customers = customerService.getAllCustomers();
         return customers.isEmpty()
                 ? ResponseEntity.status(HttpStatus.NOT_FOUND).body(CUSTOMER_NOT_FOUND)
                 : ResponseEntity.status(HttpStatus.OK).body(customers);
+    }
+
+    @HystrixCommand(fallbackMethod = "addBookingFallback")
+    @PostMapping
+    public ResponseEntity addBooking(
+            @RequestParam(name = "userId") long id,
+            @RequestParam(name = "bicycleId") long bicycleId,
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) @RequestParam(name = "startDate") LocalDate startDate,
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) @RequestParam(name = "startDate") LocalDate endDate) {
+        LOGGER.debug("Adding bicycle booking with start date {} and end date {} for customer with Id {}.", startDate,
+                endDate, id);
+        return customerService.addBooking(id, bicycleId, startDate, endDate)
+                ? ResponseEntity.status(HttpStatus.OK).body(BOOKING_ADDED)
+                : ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ERROR_WHILE_ADDING_BOOKING);
     }
 
     @SuppressWarnings("unused")
@@ -64,6 +83,11 @@ public class CustomerController {
 
     @SuppressWarnings("unused")
     public ResponseEntity getAllCustomersFallback() {
+        return ResponseEntity.ok().body( SERVICE_UNAVAILABLE_ERROR_MESSAGE );
+    }
+
+    @SuppressWarnings("unused")
+    public ResponseEntity addBookingFallback(long userId, long bicycleId, LocalDate startDate, LocalDate endDate) {
         return ResponseEntity.ok().body( SERVICE_UNAVAILABLE_ERROR_MESSAGE );
     }
 }
