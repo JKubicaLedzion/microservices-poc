@@ -20,8 +20,6 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
-import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE;
-
 @RestController
 @RequestMapping("/bicycles")
 public class BicycleController {
@@ -46,7 +44,7 @@ public class BicycleController {
     }
 
     @HystrixCommand(fallbackMethod = "getBicycleByIdFallback")
-    @GetMapping(value = "/{id}", produces = APPLICATION_JSON_UTF8_VALUE)
+    @GetMapping(value = "/{id}")
     public ResponseEntity getBicycleById(@PathVariable("id") long id) {
         LOGGER.debug("Getting bicycles with id {}.", id);
         Optional<Bicycle> bicycle = bicycleService.getBicycleById(id);
@@ -56,7 +54,7 @@ public class BicycleController {
     }
 
     @HystrixCommand(fallbackMethod = "getAllBicyclesFallback")
-    @GetMapping(produces = APPLICATION_JSON_UTF8_VALUE)
+    @GetMapping
     public ResponseEntity getAllBicycles() {
         LOGGER.debug("Getting all bicycles.");
         List<Bicycle> bicycles = bicycleService.getAllBicycles();
@@ -66,7 +64,7 @@ public class BicycleController {
     }
 
     @HystrixCommand(fallbackMethod = "getBicyclesByTypeSizeFallback")
-    @GetMapping(value = "filter", produces = APPLICATION_JSON_UTF8_VALUE)
+    @GetMapping(value = "filter")
     public ResponseEntity getBicyclesByTypeSize(@RequestParam(name = "type", required = false) String type,
                                                 @RequestParam(name = "size", required = false) String size) {
         LOGGER.debug("Getting bicycles of type {} and size {}.", type, size);
@@ -77,7 +75,7 @@ public class BicycleController {
     }
 
     @HystrixCommand(fallbackMethod = "getBicyclesByTypeSizeFallback2")
-    @GetMapping(value = "multi-filter", produces = APPLICATION_JSON_UTF8_VALUE)
+    @GetMapping(value = "multi-filter")
     public ResponseEntity getBicyclesByTypeSize2(@RequestParam(name = "type", required = false) List<String> types,
             @RequestParam(name = "size", required = false) List<String> sizes) {
         LOGGER.debug("Getting bicycles of type {} and size {}.", types, sizes);
@@ -88,13 +86,13 @@ public class BicycleController {
     }
 
     @HystrixCommand(fallbackMethod = "bookBicycleFallback")
-    @PostMapping(produces = APPLICATION_JSON_UTF8_VALUE)
+    @PostMapping
     public ResponseEntity bookBicycle(@RequestParam(name = "userId") String userId,
             @RequestParam(name = "type", required = false) String type,
             @RequestParam(name = "size", required = false) String size,
             @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) @RequestParam(name = "startDate") LocalDate startDate,
             @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) @RequestParam(name = "endDate") LocalDate endDate) {
-        LOGGER.debug("Booking bicycles of type {} and size {} for user {}.", type, size, userId);
+        LOGGER.debug("Booking bicycles of type {} and size {} for customer {}.", type, size, userId);
         return bicycleService.bookBicycle(userId, type, size, startDate, endDate)
                 ? ResponseEntity.status(HttpStatus.OK).body(BICYCLE_BOOKED)
                 : ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ERROR_WHILE_BOOKING_BICYCLE);
@@ -119,6 +117,12 @@ public class BicycleController {
     @SuppressWarnings("unused")
     public ResponseEntity getBicyclesByTypeSizeFallback2(@RequestParam(name = "type") List<String> type,
             @RequestParam(name = "size", required = false) List<String> size) {
+        return ResponseEntity.ok().body( SERVICE_UNAVAILABLE_ERROR_MESSAGE );
+    }
+
+    @SuppressWarnings("unused")
+    public ResponseEntity bookBicycleFallback(String userId, String type, String size, LocalDate startDate,
+            LocalDate endDate) {
         return ResponseEntity.ok().body( SERVICE_UNAVAILABLE_ERROR_MESSAGE );
     }
 }
