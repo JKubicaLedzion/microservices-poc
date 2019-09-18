@@ -117,14 +117,14 @@ public class BicycleController {
                 : ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ERROR_WHILE_BOOKING_BICYCLE);
     }
 
-    @HystrixCommand(fallbackMethod = "checkBicycleAvailabilityFallback")
+    @HystrixCommand(fallbackMethod = "bicycleAvailableFallback")
     @PostMapping
-    public ResponseEntity checkBicycleAvailability(
+    public ResponseEntity bicycleAvailable(
             @RequestParam(name = "bicycleId") long bicycleId,
             @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) @RequestParam(name = "startDate") LocalDate startDate,
             @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) @RequestParam(name = "endDate") LocalDate endDate) {
         LOGGER.debug("Checking availability of bicycles with id {} for period: stary date = {}, end date = {}.", bicycleId, startDate, endDate);
-        return bicycleService.checkBicycleAvailability(bicycleId, startDate, endDate)
+        return bicycleService.bicycleAvailable(bicycleId, startDate, endDate)
                 ? ResponseEntity.status(HttpStatus.OK).body(BICYCLE_AVAILABLE)
                 : ResponseEntity.status(HttpStatus.NOT_FOUND).body(BICYCLE_UNAVAILABLE);
     }
@@ -152,13 +152,18 @@ public class BicycleController {
     }
 
     @SuppressWarnings("unused")
-    public ResponseEntity findAndBookBicycleFallback(String userId, String type, String size, LocalDate startDate,
+    public ResponseEntity findAndBookBicycleFallback(long userId, String type, String size, LocalDate startDate,
             LocalDate endDate) {
         return ResponseEntity.ok().body( SERVICE_UNAVAILABLE_ERROR_MESSAGE );
     }
 
     @SuppressWarnings("unused")
-    public ResponseEntity bookBicycleFallback(String userId, long bicycleId, LocalDate startDate, LocalDate endDate) {
+    public ResponseEntity bookBicycleFallback(long userId, long bicycleId, LocalDate startDate, LocalDate endDate) {
+        return ResponseEntity.ok().body( SERVICE_UNAVAILABLE_ERROR_MESSAGE );
+    }
+
+    @SuppressWarnings("unused")
+    public ResponseEntity bicycleAvailableFallback(long bicycleId, LocalDate startDate, LocalDate endDate) {
         return ResponseEntity.ok().body( SERVICE_UNAVAILABLE_ERROR_MESSAGE );
     }
 }

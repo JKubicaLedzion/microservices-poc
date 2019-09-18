@@ -86,4 +86,15 @@ public class BicycleDefaultDAO implements BicycleDAO {
         bicycle.get().getBookings().put(userId, bookingPeriod);
         return true;
     }
+
+    @Override
+    public boolean bicycleAvailable(long bicycleId, LocalDate startDate, LocalDate endDate) {
+        Optional<Bicycle> bicycle = getBicycleById(bicycleId);
+        if(!bicycle.isPresent()) {
+            return false;
+        }
+        return !bicycle.get().getBookings().values().stream()
+                .filter(b -> b.containsDate(startDate) || b.containsDate(endDate))
+                .collect(Collectors.toList()).isEmpty();
+    }
 }

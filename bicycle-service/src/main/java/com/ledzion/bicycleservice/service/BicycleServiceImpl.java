@@ -59,7 +59,7 @@ public class BicycleServiceImpl implements BicycleService {
     }
 
     @Override
-    public boolean checkBicycleAvailability(long bicycleId, LocalDate startDate, LocalDate endDate) {
-        return bicycleDAO.checkBicycleAvailability(bicycleId, startDate, endDate);
+    public boolean bicycleAvailable(long bicycleId, LocalDate startDate, LocalDate endDate) {
+        return bicycleDAO.bicycleAvailable(bicycleId, startDate, endDate);
     }
 }

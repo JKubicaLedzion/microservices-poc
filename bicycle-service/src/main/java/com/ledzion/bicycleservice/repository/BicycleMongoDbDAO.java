@@ -42,7 +42,7 @@ public class BicycleMongoDbDAO implements BicycleDAO {
     }
 
     @Override
-    public boolean checkBicycleAvailability(long bicycleId, LocalDate startDate, LocalDate endDate) {
+    public boolean bicycleAvailable(long bicycleId, LocalDate startDate, LocalDate endDate) {
         return false;
     }
 }

@@ -8,7 +8,7 @@ import java.util.Optional;
 
 public interface BicycleService {
 
-    boolean checkBicycleAvailability(long bicycleId, LocalDate startDate, LocalDate endDate);
+    boolean bicycleAvailable(long bicycleId, LocalDate startDate, LocalDate endDate);
 
     Optional<Bicycle> getBicycleById(long id);
 
