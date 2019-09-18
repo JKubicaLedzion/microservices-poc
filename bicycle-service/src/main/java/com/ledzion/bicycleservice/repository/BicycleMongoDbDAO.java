@@ -31,8 +31,18 @@ public class BicycleMongoDbDAO implements BicycleDAO {
     }
 
     @Override
-    public boolean bookBicycle(long userId, String type, String size, LocalDate startDate,
+    public boolean findAndBookBicycle(long userId, String type, String size, LocalDate startDate,
             LocalDate endDate) {
+        return false;
+    }
+
+    @Override
+    public boolean bookBicycle(long userId, long bicycleId, LocalDate startDate, LocalDate endDate) {
+        return false;
+    }
+
+    @Override
+    public boolean checkBicycleAvailability(long bicycleId, LocalDate startDate, LocalDate endDate) {
         return false;
     }
 }
