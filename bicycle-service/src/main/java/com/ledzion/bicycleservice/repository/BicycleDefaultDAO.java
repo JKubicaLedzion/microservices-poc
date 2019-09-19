@@ -93,7 +93,7 @@ public class BicycleDefaultDAO implements BicycleDAO {
         if(!bicycle.isPresent()) {
             return false;
         }
-        return !bicycle.get().getBookings().values().stream()
+        return bicycle.get().getBookings().values().stream()
                 .filter(b -> b.containsDate(startDate) || b.containsDate(endDate))
                 .collect(Collectors.toList()).isEmpty();
     }

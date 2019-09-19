@@ -104,13 +104,13 @@ public class BicycleController {
                 : ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ERROR_WHILE_BOOKING_BICYCLE);
     }
 
-    @HystrixCommand(fallbackMethod = "findAndBookBicycleFallback")
-    @PostMapping
+    @HystrixCommand(fallbackMethod = "bookBicycleFallback")
+    @PostMapping(value = "/{id}/booking/{userId}/{startDate}/{endDate}")
     public ResponseEntity bookBicycle(
-            @RequestParam(name = "userId") long userId,
-            @RequestParam(name = "bicycleId") long bicycleId,
-            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) @RequestParam(name = "startDate") LocalDate startDate,
-            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) @RequestParam(name = "endDate") LocalDate endDate) {
+            @PathVariable("userId") long userId,
+            @PathVariable("id") long bicycleId,
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) @PathVariable("startDate") LocalDate startDate,
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) @PathVariable("endDate") LocalDate endDate) {
         LOGGER.debug("Booking bicycles with id {} for customer {}.", bicycleId, userId);
         return bicycleService.bookBicycle(userId, bicycleId, startDate, endDate)
                 ? ResponseEntity.status(HttpStatus.OK).body(BICYCLE_BOOKED)
@@ -118,13 +118,13 @@ public class BicycleController {
     }
 
     @HystrixCommand(fallbackMethod = "bicycleAvailableFallback")
-    @PostMapping
+    @GetMapping(value = "/{id}/availability")
     public ResponseEntity bicycleAvailable(
-            @RequestParam(name = "bicycleId") long bicycleId,
+            @PathVariable(name = "id") long id,
             @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) @RequestParam(name = "startDate") LocalDate startDate,
             @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) @RequestParam(name = "endDate") LocalDate endDate) {
-        LOGGER.debug("Checking availability of bicycles with id {} for period: stary date = {}, end date = {}.", bicycleId, startDate, endDate);
-        return bicycleService.bicycleAvailable(bicycleId, startDate, endDate)
+        LOGGER.debug("Checking availability of bicycles with id {} for period: stary date = {}, end date = {}.", id, startDate, endDate);
+        return bicycleService.bicycleAvailable(id, startDate, endDate)
                 ? ResponseEntity.status(HttpStatus.OK).body(BICYCLE_AVAILABLE)
                 : ResponseEntity.status(HttpStatus.NOT_FOUND).body(BICYCLE_UNAVAILABLE);
     }
