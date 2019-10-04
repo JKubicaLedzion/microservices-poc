@@ -12,5 +12,5 @@ public interface CustomerDAO {
 
     List<Customer> getAllCustomers();
 
-    boolean addBooking(long userId, long bicycleId, LocalDate startDate, LocalDate endDate);
+    boolean addBooking(long id, long bicycleId, LocalDate startDate, LocalDate endDate);
 }

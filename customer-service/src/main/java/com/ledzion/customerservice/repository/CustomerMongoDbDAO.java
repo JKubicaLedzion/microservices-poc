@@ -20,7 +20,7 @@ public class CustomerMongoDbDAO implements CustomerDAO {
     }
 
     @Override
-    public boolean addBooking(long userId, long bicycleId, LocalDate startDate, LocalDate endDate) {
+    public boolean addBooking(long id, long bicycleId, LocalDate startDate, LocalDate endDate) {
         return false;
     }
 }

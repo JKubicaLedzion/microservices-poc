@@ -70,9 +70,9 @@ public class BicycleDefaultDAO implements BicycleDAO {
     }
 
     @Override
-    public boolean bookBicycle(long userId, long bicycleId, LocalDate startDate, LocalDate endDate) {
+    public boolean bookBicycle(long userId, long id, LocalDate startDate, LocalDate endDate) {
         //todo: add specific error
-        Optional<Bicycle> bicycle = getBicycleById(bicycleId);
+        Optional<Bicycle> bicycle = getBicycleById(id);
         if(!bicycle.isPresent()) {
             return false;
         }
@@ -88,8 +88,8 @@ public class BicycleDefaultDAO implements BicycleDAO {
     }
 
     @Override
-    public boolean bicycleAvailable(long bicycleId, LocalDate startDate, LocalDate endDate) {
-        Optional<Bicycle> bicycle = getBicycleById(bicycleId);
+    public boolean bicycleAvailable(long id, LocalDate startDate, LocalDate endDate) {
+        Optional<Bicycle> bicycle = getBicycleById(id);
         if(!bicycle.isPresent()) {
             return false;
         }

@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDate;
@@ -63,12 +62,12 @@ public class CustomerController {
     }
 
     @HystrixCommand(fallbackMethod = "addBookingFallback")
-    @PostMapping
+    @PostMapping("/{id}/booking/{bicycleId}/{startDate}/{endDate}")
     public ResponseEntity addBooking(
-            @RequestParam(name = "userId") long id,
-            @RequestParam(name = "bicycleId") long bicycleId,
-            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) @RequestParam(name = "startDate") LocalDate startDate,
-            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) @RequestParam(name = "startDate") LocalDate endDate) {
+            @PathVariable("id") long id,
+            @PathVariable("bicycleId") long bicycleId,
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) @PathVariable("startDate") LocalDate startDate,
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) @PathVariable("endDate") LocalDate endDate) {
         LOGGER.debug("Adding bicycle booking with start date {} and end date {} for customer with Id {}.", startDate,
                 endDate, id);
         return customerService.addBooking(id, bicycleId, startDate, endDate)
@@ -87,7 +86,7 @@ public class CustomerController {
     }
 
     @SuppressWarnings("unused")
-    public ResponseEntity addBookingFallback(long userId, long bicycleId, LocalDate startDate, LocalDate endDate) {
+    public ResponseEntity addBookingFallback(long id, long bicycleId, LocalDate startDate, LocalDate endDate) {
         return ResponseEntity.ok().body( SERVICE_UNAVAILABLE_ERROR_MESSAGE );
     }
 }
