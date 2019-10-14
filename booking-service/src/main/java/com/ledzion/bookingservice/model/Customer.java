@@ -1,7 +1,6 @@
-package com.ledzion.customerservice.model;
+package com.ledzion.bookingservice.model;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -12,15 +11,9 @@ public class Customer {
     private String phone;
     private String email;
     private Address address;
-    private Map<Long, List<BookingPeriod>> bookings;
+    private Map<Long, BookingPeriod> bookings;
 
-    public Customer(long id, String name, String phone, String email, Address address) {
-        this.id = id;
-        this.name = name;
-        this.phone = phone;
-        this.email = email;
-        this.address = address;
-        bookings = new HashMap<>();
+    public Customer() {
     }
 
     public long getId() {
@@ -63,11 +56,11 @@ public class Customer {
         this.address = address;
     }
 
-    public Map<Long, List<BookingPeriod>> getBookings() {
+    public Map<Long,BookingPeriod> getBookings() {
         return bookings;
     }
 
-    public void setBookings( Map<Long, List<BookingPeriod>> bookings ) {
+    public void setBookings( Map<Long,BookingPeriod> bookings ) {
         this.bookings = bookings;
     }
 

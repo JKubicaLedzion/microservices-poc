@@ -52,7 +52,7 @@ public class BicycleDefaultDAO implements BicycleDAO {
     }
 
     @Override
-    public boolean bookBicycle(long userId, String type, String size, LocalDate startDate, LocalDate endDate) {
+    public boolean findAndBookBicycle(long userId, String type, String size, LocalDate startDate, LocalDate endDate) {
         //todo: add specific error
         Bicycle bicycle = getBicyclesByTypeSize(type, size).get(0);
         if(Objects.isNull(bicycle)) {
@@ -67,5 +67,34 @@ public class BicycleDefaultDAO implements BicycleDAO {
         BookingPeriod bookingPeriod = new BookingPeriod(startDate, endDate);
         bicycle.getBookings().put(userId, bookingPeriod);
         return true;
+    }
+
+    @Override
+    public boolean bookBicycle(long userId, long id, LocalDate startDate, LocalDate endDate) {
+        //todo: add specific error
+        Optional<Bicycle> bicycle = getBicycleById(id);
+        if(!bicycle.isPresent()) {
+            return false;
+        }
+        List<BookingPeriod> bookings = bicycle.get().getBookings().values().stream()
+                .filter(b -> b.containsDate(startDate) || b.containsDate(endDate))
+                .collect(Collectors.toList());
+        if(!bookings.isEmpty()) {
+            return false;
+        }
+        BookingPeriod bookingPeriod = new BookingPeriod(startDate, endDate);
+        bicycle.get().getBookings().put(userId, bookingPeriod);
+        return true;
+    }
+
+    @Override
+    public boolean bicycleAvailable(long id, LocalDate startDate, LocalDate endDate) {
+        Optional<Bicycle> bicycle = getBicycleById(id);
+        if(!bicycle.isPresent()) {
+            return false;
+        }
+        return bicycle.get().getBookings().values().stream()
+                .filter(b -> b.containsDate(startDate) || b.containsDate(endDate))
+                .collect(Collectors.toList()).isEmpty();
     }
 }

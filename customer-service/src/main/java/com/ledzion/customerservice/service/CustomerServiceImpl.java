@@ -38,7 +38,7 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public boolean addBooking(long userId, long bicycleId, LocalDate startDate, LocalDate endDate) {
-        return customerDAO.addBooking(userId, bicycleId, startDate, endDate);
+    public boolean addBooking(long id, long bicycleId, LocalDate startDate, LocalDate endDate) {
+        return customerDAO.addBooking(id, bicycleId, startDate, endDate);
     }
 }

@@ -48,8 +48,18 @@ public class BicycleServiceImpl implements BicycleService {
     }
 
     @Override
-    public boolean bookBicycle(long userId, String type, String size, LocalDate startDate,
+    public boolean findAndBookBicycle(long userId, String type, String size, LocalDate startDate,
             LocalDate endDate) {
-        return bicycleDAO.bookBicycle(userId, type, size, startDate, endDate);
+        return bicycleDAO.findAndBookBicycle(userId, type, size, startDate, endDate);
+    }
+
+    @Override
+    public boolean bookBicycle(long userId, long id, LocalDate startDate, LocalDate endDate) {
+        return bicycleDAO.bookBicycle(userId, id, startDate, endDate);
+    }
+
+    @Override
+    public boolean bicycleAvailable(long id, LocalDate startDate, LocalDate endDate) {
+        return bicycleDAO.bicycleAvailable(id, startDate, endDate);
     }
 }

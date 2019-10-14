@@ -34,8 +34,8 @@ public class CustomerDefaultDAO implements CustomerDAO {
     }
 
     @Override
-    public boolean addBooking(long userId, long bicycleId, LocalDate startDate, LocalDate endDate) {
-        Optional<Customer> customer = getCustomerById(userId);
+    public boolean addBooking(long id, long bicycleId, LocalDate startDate, LocalDate endDate) {
+        Optional<Customer> customer = getCustomerById(id);
         if(!customer.isPresent()) {
             return false;
         }
