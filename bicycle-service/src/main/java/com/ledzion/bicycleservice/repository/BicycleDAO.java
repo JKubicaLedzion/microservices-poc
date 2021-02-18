@@ -20,5 +20,5 @@ public interface BicycleDAO {
 
     List<Bicycle> getBicyclesByTypeSize(String type, String size);
 
-    List<Bicycle> getBicyclesByTypeSize2(List<String> type, List<String> size);
+    List<Bicycle> getBicyclesByTypesSizes(List<String> type, List<String> size);
 }
