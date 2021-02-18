@@ -1,14 +1,11 @@
 package com.ledzion.bookingservice.service;
 
 import com.ledzion.bookingservice.model.Bicycle;
-import com.ledzion.bookingservice.model.BookingPeriod;
 import com.ledzion.bookingservice.model.Customer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class BookingService {
@@ -28,12 +25,8 @@ public class BookingService {
         Bicycle bicycle = getBicycleByTypeSize(type, size);
         //TODO: add error
 
-        // if exists - check dates if can be booked, if not - throw error
-        // of add new endpoint to bicycle-service which checks bicycle availability
-        List<BookingPeriod> bookings = bicycle.getBookings().values().stream()
-                .filter(b -> b.containsDate(startDate) || b.containsDate(endDate))
-                .collect( Collectors.toList());
-        if(!bookings.isEmpty()) {
+        // if exists - check bicycle availability
+        if(!bicycleAvailable(bicycle.getId(), startDate, endDate)) {
             return false;
         }
         
@@ -48,5 +41,9 @@ public class BookingService {
 
     private Bicycle getBicycleByTypeSize(String type, String size) {
         return bicycleService.getBicyclesByTypeSize(type, size).get(0);
+    }
+
+    public boolean bicycleAvailable(long id, LocalDate startDate, LocalDate endDate) {
+        return bicycleService.bicycleAvailable(id, startDate, endDate);
     }
 }

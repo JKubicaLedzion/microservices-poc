@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,6 +30,10 @@ public class BookingController {
     private final Logger LOGGER = LoggerFactory.getLogger(BookingController.class);
 
     private static final String BICYCLE_BOOKED = "Bicycle booked.";
+
+    private static final String BICYCLE_AVAILABLE = "Bicycle available.";
+
+    private static final String BICYCLE_UNAVAILABLE = "Bicycle unavailable.";
 
     private static final String ERROR_WHILE_BOOKING_BICYCLE = "Error while booking bicycle. Provided data incorrect.";
 
@@ -62,6 +67,17 @@ public class BookingController {
             ) {
         List<Bicycle> bicycles = bicycleService.getBicyclesByTypeSize(type, size);
         return ResponseEntity.status(HttpStatus.OK).body(bicycles);
+    }
+
+    //todo: test method, to be deleted
+    @GetMapping(value = "bicycles/{bicycleId}/availability")
+    public ResponseEntity bicycleAvailable(
+            @PathVariable(name = "bicycleId") long bicycleId,
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) @RequestParam(name = "startDate") LocalDate startDate,
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) @RequestParam(name = "endDate") LocalDate endDate) {
+        return bookingService.bicycleAvailable(bicycleId, startDate, endDate)
+                ? ResponseEntity.status(HttpStatus.OK).body(BICYCLE_AVAILABLE)
+                : ResponseEntity.status(HttpStatus.NOT_FOUND).body(BICYCLE_UNAVAILABLE);
     }
 
     @PostMapping
