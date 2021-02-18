@@ -44,7 +44,7 @@ public class BicycleDefaultDAO implements BicycleDAO {
                 .collect(Collectors.toList());
     }
 
-    public List<Bicycle> getBicyclesByTypeSize2(List<String> types, List<String> sizes) {
+    public List<Bicycle> getBicyclesByTypesSizes(List<String> types, List<String> sizes) {
         return getAllBicycles().stream()
                 .filter(b -> Objects.isNull(types) || types.contains(b.getType().getTypeDescription()))
                 .filter(b -> Objects.isNull(sizes) || sizes.contains(b.getSize().getSizeDescription()))

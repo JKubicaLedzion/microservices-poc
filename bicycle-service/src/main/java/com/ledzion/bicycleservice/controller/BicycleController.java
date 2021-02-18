@@ -80,7 +80,7 @@ public class BicycleController {
 
     @HystrixCommand(fallbackMethod = "getBicyclesByTypeSizeFallback2")
     @GetMapping(value = "multi-filter")
-    public ResponseEntity getBicyclesByTypeSize2(
+    public ResponseEntity getBicyclesByTypesSizes(
             @RequestParam(name = "type", required = false) List<String> types,
             @RequestParam(name = "size", required = false) List<String> sizes) {
         LOGGER.debug("Getting bicycles of type {} and size {}.", types, sizes);
