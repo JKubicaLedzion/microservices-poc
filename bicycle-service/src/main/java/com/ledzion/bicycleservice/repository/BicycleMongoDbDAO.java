@@ -25,7 +25,7 @@ public class BicycleMongoDbDAO implements BicycleDAO {
     }
 
     @Override
-    public List<Bicycle> getBicyclesByTypeSize2( List<String> type, List<String> size )
+    public List<Bicycle> getBicyclesByTypesSizes( List<String> type, List<String> size )
     {
         return null;
     }
