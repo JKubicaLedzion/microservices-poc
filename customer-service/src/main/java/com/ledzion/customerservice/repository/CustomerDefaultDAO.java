@@ -39,7 +39,14 @@ public class CustomerDefaultDAO implements CustomerDAO {
         if(!customer.isPresent()) {
             return false;
         }
-        customer.get().getBookings().put(bicycleId, new BookingPeriod(startDate, endDate));
+        List<BookingPeriod> bicycleBookings = customer.get().getBookings().get(bicycleId);
+        if(bicycleBookings == null || bicycleBookings.isEmpty()) {
+            customer.get().getBookings()
+                    .put(bicycleId, new ArrayList<>(Arrays.asList( new BookingPeriod(startDate, endDate))));
+        } else {
+            bicycleBookings.add(new BookingPeriod(startDate, endDate));
+            customer.get().getBookings().put(bicycleId, bicycleBookings);
+        }
         return true;
     }
 }
