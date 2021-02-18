@@ -22,32 +22,31 @@ public class BookingService {
     public boolean bookBicycle(long userId, String type, String size, LocalDate startDate, LocalDate endDate) {
         // get user and check if exists. if not - throw error
         Customer customer = getCustomerById(userId);
+        //TODO: add error
 
         // check if bicycle exists for given type, size, if not - throw error
-        Bicycle bicycle = getCustomerById(type, size);
+        Bicycle bicycle = getBicycleByTypeSize(type, size);
+        //TODO: add error
 
         // if exists - check dates if can be booked, if not - throw error
         // of add new endpoint to bicycle-service which checks bicycle availability
-
         List<BookingPeriod> bookings = bicycle.getBookings().values().stream()
                 .filter(b -> b.containsDate(startDate) || b.containsDate(endDate))
                 .collect( Collectors.toList());
         if(!bookings.isEmpty()) {
             return false;
         }
-
-
+        
         // call addBooking in customer-service passing userId, bicycleId, dates
         // call bookBicycle in bicycle-service passing userId, bicycleId, dates
         return false;
     }
 
     private Customer getCustomerById(long userId) {
-        // where error handling? here or CustomerService class
         return customerService.getCustomerById(userId);
     }
 
-    private Bicycle getCustomerById(String type, String size) {
+    private Bicycle getBicycleByTypeSize(String type, String size) {
         return bicycleService.getBicyclesByTypeSize(type, size).get(0);
     }
 }
