@@ -36,7 +36,7 @@ public class BicycleServiceImpl implements BicycleService {
 
     @Override
     public List<Bicycle> getBicyclesByTypeSize2(List<String> types, List<String> sizes) {
-        return bicycleDAO.getBicyclesByTypeSize2(types, sizes);
+        return bicycleDAO.getBicyclesByTypesSizes(types, sizes);
     }
 
     public BicycleDAO getBicycleDAO() {
