@@ -24,7 +24,7 @@ public class BookingService {
         Customer customer = getCustomerById(userId);
 
         // check if bicycle exists for given type, size, if not - throw error
-        Bicycle bicycle = getCustomerById(type, size);
+        Bicycle bicycle = getBicyclesByTypeSize(type, size);
 
         // if exists - check dates if can be booked, if not - throw error
         // of add new endpoint to bicycle-service which checks bicycle availability
@@ -47,7 +47,7 @@ public class BookingService {
         return customerService.getCustomerById(userId);
     }
 
-    private Bicycle getCustomerById(String type, String size) {
+    private Bicycle getBicyclesByTypeSize(String type, String size) {
         return bicycleService.getBicyclesByTypeSize(type, size).get(0);
     }
 }
