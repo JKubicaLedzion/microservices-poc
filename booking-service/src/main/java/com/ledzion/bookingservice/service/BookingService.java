@@ -1,6 +1,8 @@
 package com.ledzion.bookingservice.service;
 
 import com.ledzion.bookingservice.model.Bicycle;
+import com.ledzion.bookingservice.model.BookingParameters;
+import com.ledzion.bookingservice.model.BookingRequest;
 import com.ledzion.bookingservice.model.Customer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,23 +18,34 @@ public class BookingService {
     @Autowired
     private BicycleService bicycleService;
 
-    public boolean bookBicycle(long userId, String type, String size, LocalDate startDate, LocalDate endDate) {
+    public boolean bookBicycle(BookingRequest bookingRequest) {
         // get user and check if exists. if not - throw error
-        Customer customer = getCustomerById(userId);
+        Customer customer = getCustomerById(bookingRequest.getUserId());
         //TODO: add error
 
         // check if bicycle exists for given type, size, if not - throw error
-        Bicycle bicycle = getBicycleByTypeSize(type, size);
+        Bicycle bicycle = getBicycleByTypeSize(bookingRequest.getType(), bookingRequest.getSize());
         //TODO: add error
 
         // if exists - check bicycle availability
-        if(!bicycleAvailable(bicycle.getId(), startDate, endDate)) {
+        if(!bicycleAvailable(bicycle.getId(), bookingRequest.getStartDate(), bookingRequest.getEndDate())) {
             return false;
         }
         
-        // call addBooking in customer-service passing userId, bicycleId, dates
-        // call bookBicycle in bicycle-service passing userId, bicycleId, dates
-        return false;
+        // add booking for customer
+        addBookingForCustomer(bookingRequest, bicycle.getId());
+
+        // add booking for bicycle
+        addBookingForBicycle(bookingRequest, bicycle.getId());
+        return true;
+    }
+
+    private void addBookingForBicycle(BookingRequest bookingRequest, long bicycleId) {
+        bicycleService.addBooking(prepareBookingParameters(bookingRequest, bicycleId));
+    }
+
+    public boolean bicycleAvailable(long id, LocalDate startDate, LocalDate endDate) {
+        return bicycleService.bicycleAvailable(id, startDate, endDate);
     }
 
     private Customer getCustomerById(long userId) {
@@ -43,7 +56,17 @@ public class BookingService {
         return bicycleService.getBicyclesByTypeSize(type, size).get(0);
     }
 
-    public boolean bicycleAvailable(long id, LocalDate startDate, LocalDate endDate) {
-        return bicycleService.bicycleAvailable(id, startDate, endDate);
+    private void addBookingForCustomer(BookingRequest bookingRequest, long bicycleId){
+        customerService.addBooking(prepareBookingParameters(bookingRequest, bicycleId));
+    }
+
+    // TODO: add Lombok Builder annotation
+    private BookingParameters prepareBookingParameters(BookingRequest bookingRequest, long bicycleId){
+        BookingParameters bookingParameters = new BookingParameters();
+        bookingParameters.setUserId(bookingRequest.getUserId());
+        bookingParameters.setBicycleId(bicycleId);
+        bookingParameters.setStartDate(bookingRequest.getStartDate());
+        bookingParameters.setEndDate(bookingRequest.getEndDate());
+        return bookingParameters;
     }
 }

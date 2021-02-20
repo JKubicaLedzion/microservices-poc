@@ -1,6 +1,7 @@
 package com.ledzion.bicycleservice.model;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -9,8 +10,7 @@ public class Bicycle {
     private long id;
     private Type type;
     private Size size;
-    private Map<Long, BookingPeriod> bookings;
-    //xyz
+    private Map<Long, List<BookingPeriod>> bookings;
 
     public Bicycle(long id, Type type, Size size) {
         this.id = id;
@@ -43,11 +43,11 @@ public class Bicycle {
         this.size = size;
     }
 
-    public Map<Long, BookingPeriod> getBookings() {
+    public Map<Long, List<BookingPeriod>> getBookings() {
         return bookings;
     }
 
-    public void setBookings(Map<Long, BookingPeriod> bookings ) {
+    public void setBookings(Map<Long, List<BookingPeriod>> bookings ) {
         this.bookings = bookings;
     }
 

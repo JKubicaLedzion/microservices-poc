@@ -1,27 +1,16 @@
 package com.ledzion.bookingservice.controller;
 
-import com.ledzion.bookingservice.model.Bicycle;
-import com.ledzion.bookingservice.model.Customer;
-import com.ledzion.bookingservice.service.BicycleService;
+import com.ledzion.bookingservice.model.BookingRequest;
 import com.ledzion.bookingservice.service.BookingService;
-import com.ledzion.bookingservice.service.CustomerService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cloud.client.ServiceInstance;
-import org.springframework.cloud.client.discovery.DiscoveryClient;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.time.LocalDate;
-import java.util.List;
 
 @RestController
 @RequestMapping("/bookings")
@@ -37,59 +26,27 @@ public class BookingController {
 
     private static final String ERROR_WHILE_BOOKING_BICYCLE = "Error while booking bicycle. Provided data incorrect.";
 
+    private static final String END_DATE_IS_AFTER_START_DATE = "End date is after start date.";
+
+    private static final String BOOKING_DETAILS_MISSING = "Booking details missing.";
+
     @Autowired
     private BookingService bookingService;
 
-    @Autowired
-    private CustomerService customerService;
-
-    @Autowired
-    private DiscoveryClient client;
-
-    @Autowired
-    private BicycleService bicycleService;
-
-    //todo: test method, to be deleted
-    @GetMapping(value = "customers/{id}")
-//    public ResponseEntity<Integer> getCustomerById(@PathVariable("id") long id ) {
-    public ResponseEntity<Customer> getCustomerById(@PathVariable("id") long id ) {
-        List<ServiceInstance> localInstance = client.getInstances("customer-service");
-        Customer customer = customerService.getCustomerById(id);
-//        return ResponseEntity.status(HttpStatus.OK).body(localInstance.get(0).getPort());
-        return ResponseEntity.status(HttpStatus.OK).body(customer);
-    }
-
-    //todo: test method, to be deleted
-    @GetMapping(value = "bicycles")
-    public ResponseEntity<List<Bicycle>> getBicycleByTypeSize(
-            @RequestParam(name = "type", required = false) String type,
-            @RequestParam(name = "size", required = false) String size
-            ) {
-        List<Bicycle> bicycles = bicycleService.getBicyclesByTypeSize(type, size);
-        return ResponseEntity.status(HttpStatus.OK).body(bicycles);
-    }
-
-    //todo: test method, to be deleted
-    @GetMapping(value = "bicycles/{bicycleId}/availability")
-    public ResponseEntity bicycleAvailable(
-            @PathVariable(name = "bicycleId") long bicycleId,
-            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) @RequestParam(name = "startDate") LocalDate startDate,
-            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) @RequestParam(name = "endDate") LocalDate endDate) {
-        return bookingService.bicycleAvailable(bicycleId, startDate, endDate)
-                ? ResponseEntity.status(HttpStatus.OK).body(BICYCLE_AVAILABLE)
-                : ResponseEntity.status(HttpStatus.NOT_FOUND).body(BICYCLE_UNAVAILABLE);
-    }
-
-    @PostMapping
-    public ResponseEntity<String> bookBicycle(
-            @RequestParam(name = "userId") long userId,
-            @RequestParam(name = "type", required = false) String type,
-            @RequestParam(name = "size", required = false) String size,
-            @RequestParam(name = "startDate") LocalDate startDate,
-            @RequestParam(name = "endDate") LocalDate endDate) {
+    //TODO: add possibility that size or type is empty
+    @PutMapping
+    public ResponseEntity<String> bookBicycle(@RequestBody BookingRequest bookingRequest) {
         LOGGER.debug("Booking bicycles of type {} and sie {} for customer with id {} for period: start date = {},"
-                + " end date = {}.", type, size, userId, startDate, endDate);
-        return bookingService.bookBicycle(userId, type, size, startDate, endDate)
+                + " end date = {}.", bookingRequest.getType(), bookingRequest.getSize(),
+                bookingRequest.getUserId(), bookingRequest.getStartDate(),
+                bookingRequest.getEndDate());
+        if(bookingRequest.getStartDate() == null || bookingRequest.getEndDate() == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(BOOKING_DETAILS_MISSING);
+        }
+        if(bookingRequest.getEndDate().isBefore(bookingRequest.getStartDate())) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(END_DATE_IS_AFTER_START_DATE);
+        }
+        return bookingService.bookBicycle(bookingRequest)
                 ? ResponseEntity.status(HttpStatus.OK).body(BICYCLE_BOOKED)
                 : ResponseEntity.status(HttpStatus.OK).body(ERROR_WHILE_BOOKING_BICYCLE);
     }

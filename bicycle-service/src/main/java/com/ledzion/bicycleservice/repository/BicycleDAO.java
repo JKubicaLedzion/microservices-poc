@@ -1,6 +1,7 @@
 package com.ledzion.bicycleservice.repository;
 
 import com.ledzion.bicycleservice.model.Bicycle;
+import com.ledzion.bicycleservice.model.BookingParameters;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -14,11 +15,7 @@ public interface BicycleDAO {
 
     List<Bicycle> getAllBicycles();
 
-    boolean findAndBookBicycle(long userId, String type, String size, LocalDate startDate, LocalDate endDate);
-
-    boolean bookBicycle(long userId, long id, LocalDate startDate, LocalDate endDate);
+    boolean bookBicycle(BookingParameters bookingParameters);
 
     List<Bicycle> getBicyclesByTypeSize(String type, String size);
-
-    List<Bicycle> getBicyclesByTypesSizes(List<String> type, List<String> size);
 }
