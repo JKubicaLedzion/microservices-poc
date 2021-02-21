@@ -2,6 +2,7 @@ package com.ledzion.bookingservice.controller;
 
 import com.ledzion.bookingservice.model.BookingRequest;
 import com.ledzion.bookingservice.service.BookingService;
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,12 +41,14 @@ public class BookingController {
                 + " end date = {}.", bookingRequest.getType(), bookingRequest.getSize(),
                 bookingRequest.getUserId(), bookingRequest.getStartDate(),
                 bookingRequest.getEndDate());
+
         if(bookingRequest.getStartDate() == null || bookingRequest.getEndDate() == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(BOOKING_DETAILS_MISSING);
         }
         if(bookingRequest.getEndDate().isBefore(bookingRequest.getStartDate())) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(END_DATE_IS_AFTER_START_DATE);
         }
+
         return bookingService.bookBicycle(bookingRequest)
                 ? ResponseEntity.status(HttpStatus.OK).body(BICYCLE_BOOKED)
                 : ResponseEntity.status(HttpStatus.OK).body(ERROR_WHILE_BOOKING_BICYCLE);

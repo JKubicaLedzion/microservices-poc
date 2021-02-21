@@ -23,7 +23,5 @@ public enum Size {
                 .filter(s -> sizeDescription.equals(s.getSizeDescription()))
                 .findAny()
                 .orElseThrow(() -> new NoSuchElementException("Wrong size rate provided."));
-
-
     }
 }

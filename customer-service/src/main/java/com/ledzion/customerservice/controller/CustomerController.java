@@ -87,17 +87,17 @@ public class CustomerController {
     }
 
     @SuppressWarnings("unused")
-    public ResponseEntity getCustomerByIdFallback(@PathVariable("id") long id) {
-        return ResponseEntity.ok().body( SERVICE_UNAVAILABLE_ERROR_MESSAGE );
+    public ResponseEntity getCustomerByIdFallback(long id) {
+        return ResponseEntity.ok().body(SERVICE_UNAVAILABLE_ERROR_MESSAGE);
     }
 
     @SuppressWarnings("unused")
     public ResponseEntity getAllCustomersFallback() {
-        return ResponseEntity.ok().body( SERVICE_UNAVAILABLE_ERROR_MESSAGE );
+        return ResponseEntity.ok().body(SERVICE_UNAVAILABLE_ERROR_MESSAGE);
     }
 
     @SuppressWarnings("unused")
     public ResponseEntity addBookingFallback(BookingParameters bookingParameters) {
-        return ResponseEntity.ok().body( SERVICE_UNAVAILABLE_ERROR_MESSAGE );
+        return ResponseEntity.ok().body(SERVICE_UNAVAILABLE_ERROR_MESSAGE);
     }
 }

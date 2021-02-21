@@ -54,19 +54,16 @@ public class BicycleDefaultDAO implements BicycleDAO {
 
     @Override
     public boolean bookBicycle(BookingParameters bookingParameters) {
-        //todo: add specific error
         Optional<Bicycle> bicycle = getBicycleById(bookingParameters.getBicycleId());
         if (!bicycle.isPresent()) {
             return false;
         }
-        List<BookingPeriod> bookings = bicycle.get().getBookings().values().stream()
-                .flatMap(Collection::stream)
-                .filter(b -> b.containsDate(bookingParameters.getStartDate())
-                        || b.containsDate(bookingParameters.getEndDate()))
-                .collect(Collectors.toList());
-        if (!bookings.isEmpty()) {
+
+        if (!bicycleAvailable(bookingParameters.getBicycleId(), bookingParameters.getStartDate(),
+                bookingParameters.getEndDate())) {
             return false;
         }
+
         List<BookingPeriod> updatedBookings = bicycle.get().getBookings().get(bookingParameters.getUserId());
         if(updatedBookings == null || updatedBookings.isEmpty()) {
             updatedBookings = new ArrayList<>();
