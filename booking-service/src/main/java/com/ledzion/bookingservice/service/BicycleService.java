@@ -1,6 +1,7 @@
 package com.ledzion.bookingservice.service;
 
 import com.ledzion.bookingservice.exception.BadRequest;
+import com.ledzion.bookingservice.exception.ServiceException;
 import com.ledzion.bookingservice.model.Bicycle;
 import com.ledzion.bookingservice.model.BookingParameters;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,7 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -24,16 +26,19 @@ public class BicycleService {
     private static final String BICYCLE_SERVICE_URL = "http://bicycle-service/bicycles/";
 
     public List<Bicycle> getBicyclesByTypeSize(String type, String size) {
+        List<Bicycle> bicycles = new ArrayList<>();
         try {
-            return restTemplate.exchange( BICYCLE_SERVICE_URL + "filter?" + getFilterUrlPart(type, size),
-                    HttpMethod.GET, null, new ParameterizedTypeReference<List<Bicycle>>() {})
-                    .getBody();
+            bicycles = restTemplate.exchange(BICYCLE_SERVICE_URL + "filter?" + getFilterUrlPart(type, size),
+                    HttpMethod.GET, null, new ParameterizedTypeReference<List<Bicycle>>() {
+                    }).getBody();
         } catch (final HttpClientErrorException e) {
             if (e.getStatusCode().equals(HttpStatus.NOT_FOUND)) {
                 throw new BadRequest(e.getResponseBodyAsString());
             }
-        }//TODO
-        return null;
+        } catch (final Exception e) {
+            throw new ServiceException(e.getMessage());
+        }
+        return bicycles;
     }
 
     public boolean bicycleAvailable(long id, LocalDate startDate, LocalDate endDate) {
@@ -45,8 +50,10 @@ public class BicycleService {
             if (e.getStatusCode().equals(HttpStatus.NOT_FOUND)) {
                 throw new BadRequest(e.getResponseBodyAsString());
             }
-            return false;
+        } catch (final Exception e) {
+            throw new ServiceException(e.getMessage());
         }
+        return false;
     }
 
     public void addBooking(BookingParameters bookingParameters) {
@@ -56,6 +63,8 @@ public class BicycleService {
             if(e.getStatusCode().equals(HttpStatus.BAD_REQUEST)) {
                 throw new BadRequest(e.getResponseBodyAsString());
             }
+        } catch (final Exception e) {
+            throw new ServiceException(e.getMessage());
         }
     }
 

@@ -1,6 +1,7 @@
 package com.ledzion.bookingservice.controller;
 
 import com.ledzion.bookingservice.exception.BadRequest;
+import com.ledzion.bookingservice.exception.ServiceException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +15,11 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
 
     @ExceptionHandler(value = {BadRequest.class})
     protected ResponseEntity<Object> handleBadParameter(RuntimeException ex, WebRequest request) {
+        return handleExceptionInternal(ex, ex.getMessage(), new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
+    }
+
+    @ExceptionHandler(value = {ServiceException.class})
+    protected ResponseEntity<Object> handleServiceException(RuntimeException ex, WebRequest request) {
         return handleExceptionInternal(ex, ex.getMessage(), new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
     }
 }
