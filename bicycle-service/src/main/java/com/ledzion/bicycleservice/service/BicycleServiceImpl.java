@@ -1,6 +1,7 @@
 package com.ledzion.bicycleservice.service;
 
 import com.ledzion.bicycleservice.model.Bicycle;
+import com.ledzion.bicycleservice.model.BookingParameters;
 import com.ledzion.bicycleservice.repository.BicycleDAO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -34,11 +35,6 @@ public class BicycleServiceImpl implements BicycleService {
         return bicycleDAO.getBicyclesByTypeSize(type, size);
     }
 
-    @Override
-    public List<Bicycle> getBicyclesByTypeSize2(List<String> types, List<String> sizes) {
-        return bicycleDAO.getBicyclesByTypesSizes(types, sizes);
-    }
-
     public BicycleDAO getBicycleDAO() {
         return bicycleDAO;
     }
@@ -48,14 +44,8 @@ public class BicycleServiceImpl implements BicycleService {
     }
 
     @Override
-    public boolean findAndBookBicycle(long userId, String type, String size, LocalDate startDate,
-            LocalDate endDate) {
-        return bicycleDAO.findAndBookBicycle(userId, type, size, startDate, endDate);
-    }
-
-    @Override
-    public boolean bookBicycle(long userId, long id, LocalDate startDate, LocalDate endDate) {
-        return bicycleDAO.bookBicycle(userId, id, startDate, endDate);
+    public boolean bookBicycle(BookingParameters bookingParameters) {
+        return bicycleDAO.bookBicycle(bookingParameters);
     }
 
     @Override

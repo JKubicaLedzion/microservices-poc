@@ -1,5 +1,7 @@
 package com.ledzion.customerservice.service;
 
+import com.ledzion.customerservice.model.BookingParameters;
+import com.ledzion.customerservice.model.BookingPeriod;
 import com.ledzion.customerservice.model.Customer;
 
 import java.time.LocalDate;
@@ -12,5 +14,5 @@ public interface CustomerService {
 
     List<Customer> getAllCustomers();
 
-    boolean addBooking(long id, long bicycleId, LocalDate startDate, LocalDate endDate);
+    boolean addBooking(BookingParameters bookingParameters);
 }

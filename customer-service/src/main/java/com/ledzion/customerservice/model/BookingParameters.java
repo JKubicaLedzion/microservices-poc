@@ -1,12 +1,19 @@
-package com.ledzion.bookingservice.model;
+package com.ledzion.customerservice.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 
 @Data
-public class BookingPeriod {
+@AllArgsConstructor
+@NoArgsConstructor
+public class BookingParameters {
+
+    private long userId;
+    private long bicycleId;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate startDate;

@@ -1,5 +1,6 @@
 package com.ledzion.customerservice.controller;
 
+import com.ledzion.customerservice.model.BookingParameters;
 import com.ledzion.customerservice.model.Customer;
 import com.ledzion.customerservice.service.CustomerService;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
@@ -12,9 +13,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -33,6 +37,10 @@ public class CustomerController {
 
     private static final String SERVICE_UNAVAILABLE_ERROR_MESSAGE =
             "No Response From Customer Service at this moment. " + " Service will be back shortly.";
+
+    private static final String END_DATE_IS_AFTER_START_DATE = "End date is after start date.";
+
+    private static final String BOOKING_DETAILS_MISSING = "Booking details missing.";
 
     private CustomerService customerService;
 
@@ -62,31 +70,34 @@ public class CustomerController {
     }
 
     @HystrixCommand(fallbackMethod = "addBookingFallback")
-    @PostMapping("/{id}/booking/{bicycleId}/{startDate}/{endDate}")
-    public ResponseEntity addBooking(
-            @PathVariable("id") long id,
-            @PathVariable("bicycleId") long bicycleId,
-            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) @PathVariable("startDate") LocalDate startDate,
-            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) @PathVariable("endDate") LocalDate endDate) {
-        LOGGER.debug("Adding bicycle booking with start date {} and end date {} for customer with Id {}.", startDate,
-                endDate, id);
-        return customerService.addBooking(id, bicycleId, startDate, endDate)
+    @PutMapping("/booking")
+    public ResponseEntity addBooking(@RequestBody BookingParameters bookingParameters) {
+        LOGGER.debug("Adding bicycle booking with start date {} and end date {} for customer with Id {}.",
+                bookingParameters.getStartDate(),
+                bookingParameters.getEndDate(), bookingParameters.getUserId());
+        if(bookingParameters.getStartDate() == null || bookingParameters.getEndDate() == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(BOOKING_DETAILS_MISSING);
+        }
+        if(bookingParameters.getEndDate().isBefore(bookingParameters.getStartDate())) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(END_DATE_IS_AFTER_START_DATE);
+        }
+        return customerService.addBooking(bookingParameters)
                 ? ResponseEntity.status(HttpStatus.OK).body(BOOKING_ADDED)
                 : ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ERROR_WHILE_ADDING_BOOKING);
     }
 
     @SuppressWarnings("unused")
-    public ResponseEntity getCustomerByIdFallback(@PathVariable("id") long id) {
-        return ResponseEntity.ok().body( SERVICE_UNAVAILABLE_ERROR_MESSAGE );
+    public ResponseEntity getCustomerByIdFallback(long id) {
+        return ResponseEntity.ok().body(SERVICE_UNAVAILABLE_ERROR_MESSAGE);
     }
 
     @SuppressWarnings("unused")
     public ResponseEntity getAllCustomersFallback() {
-        return ResponseEntity.ok().body( SERVICE_UNAVAILABLE_ERROR_MESSAGE );
+        return ResponseEntity.ok().body(SERVICE_UNAVAILABLE_ERROR_MESSAGE);
     }
 
     @SuppressWarnings("unused")
-    public ResponseEntity addBookingFallback(long id, long bicycleId, LocalDate startDate, LocalDate endDate) {
-        return ResponseEntity.ok().body( SERVICE_UNAVAILABLE_ERROR_MESSAGE );
+    public ResponseEntity addBookingFallback(BookingParameters bookingParameters) {
+        return ResponseEntity.ok().body(SERVICE_UNAVAILABLE_ERROR_MESSAGE);
     }
 }

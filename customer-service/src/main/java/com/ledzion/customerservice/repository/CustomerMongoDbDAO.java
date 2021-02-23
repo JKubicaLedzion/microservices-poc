@@ -1,5 +1,6 @@
 package com.ledzion.customerservice.repository;
 
+import com.ledzion.customerservice.model.BookingParameters;
 import com.ledzion.customerservice.model.Customer;
 
 import java.time.LocalDate;
@@ -20,7 +21,7 @@ public class CustomerMongoDbDAO implements CustomerDAO {
     }
 
     @Override
-    public boolean addBooking(long id, long bicycleId, LocalDate startDate, LocalDate endDate) {
+    public boolean addBooking(BookingParameters bookingParameters) {
         return false;
     }
 }

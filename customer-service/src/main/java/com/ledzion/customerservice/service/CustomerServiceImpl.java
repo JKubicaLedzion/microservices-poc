@@ -1,11 +1,11 @@
 package com.ledzion.customerservice.service;
 
+import com.ledzion.customerservice.model.BookingParameters;
 import com.ledzion.customerservice.model.Customer;
 import com.ledzion.customerservice.repository.CustomerDAO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -38,7 +38,7 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public boolean addBooking(long id, long bicycleId, LocalDate startDate, LocalDate endDate) {
-        return customerDAO.addBooking(id, bicycleId, startDate, endDate);
+    public boolean addBooking(BookingParameters bookingParameters) {
+        return customerDAO.addBooking(bookingParameters);
     }
 }

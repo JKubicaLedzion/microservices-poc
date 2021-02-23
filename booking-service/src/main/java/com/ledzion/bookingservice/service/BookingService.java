@@ -1,49 +1,81 @@
 package com.ledzion.bookingservice.service;
 
+import com.ledzion.bookingservice.exception.BadRequest;
+import com.ledzion.bookingservice.exception.ServiceException;
 import com.ledzion.bookingservice.model.Bicycle;
+import com.ledzion.bookingservice.model.BookingParameters;
+import com.ledzion.bookingservice.model.BookingRequest;
 import com.ledzion.bookingservice.model.Customer;
+import feign.FeignException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.time.LocalDate;
 
 @Service
 public class BookingService {
 
     @Autowired
-    private CustomerService customerService;
+    private CustomerServiceProxy customerServiceProxy;
 
     @Autowired
     private BicycleService bicycleService;
 
-    public boolean bookBicycle(long userId, String type, String size, LocalDate startDate, LocalDate endDate) {
-        // get user and check if exists. if not - throw error
-        Customer customer = getCustomerById(userId);
-        //TODO: add error
+    public boolean bookBicycle(BookingRequest bookingRequest) {
+        // get user and check if exists
+        Customer customer = getCustomer(bookingRequest);
 
-        // check if bicycle exists for given type, size, if not - throw error
-        Bicycle bicycle = getBicycleByTypeSize(type, size);
-        //TODO: add error
-
-        // if exists - check bicycle availability
-        if(!bicycleAvailable(bicycle.getId(), startDate, endDate)) {
+        if(customer == null) {
             return false;
         }
-        
-        // call addBooking in customer-service passing userId, bicycleId, dates
-        // call bookBicycle in bicycle-service passing userId, bicycleId, dates
-        return false;
+
+        // check if bicycle exists for given type, size
+        Bicycle bicycle = bicycleService.getBicyclesByTypeSize(bookingRequest.getType(), bookingRequest.getSize()).get(0);
+
+        // if exists - check bicycle availability
+        if(!bicycleService.bicycleAvailable(bicycle.getId(), bookingRequest.getStartDate(), bookingRequest.getEndDate())) {
+            return false;
+        }
+
+        // add booking for customer
+        addBookingForCustomer(prepareBookingParameters(bookingRequest, bicycle.getId()));
+
+        // add booking for bicycle
+        bicycleService.addBooking(prepareBookingParameters(bookingRequest, bicycle.getId()));
+        return true;
     }
 
-    private Customer getCustomerById(long userId) {
-        return customerService.getCustomerById(userId);
+    private Customer getCustomer(BookingRequest bookingRequest) {
+        Customer customer = null;
+        try {
+            customer = customerServiceProxy.getCustomerById(bookingRequest.getUserId());
+        } catch (final FeignException e) {
+            if (e.status() == 404) {
+                throw new BadRequest(e.getMessage());
+            }
+        } catch (final Exception e) {
+            throw new ServiceException(e.getMessage());
+        }
+        return customer;
     }
 
-    private Bicycle getBicycleByTypeSize(String type, String size) {
-        return bicycleService.getBicyclesByTypeSize(type, size).get(0);
+    private void addBookingForCustomer(BookingParameters bookingParameters) {
+        try {
+            customerServiceProxy.addBooking(bookingParameters);
+        } catch (final FeignException e) {
+            if (e.status() == 400) {
+                throw new BadRequest(e.getMessage());
+            }
+        } catch (final Exception e) {
+            throw new ServiceException(e.getMessage());
+        }
     }
 
-    public boolean bicycleAvailable(long id, LocalDate startDate, LocalDate endDate) {
-        return bicycleService.bicycleAvailable(id, startDate, endDate);
+
+    private BookingParameters prepareBookingParameters(BookingRequest bookingRequest, long bicycleId){
+        return BookingParameters.builder()
+                .userId(bookingRequest.getUserId())
+                .bicycleId(bicycleId)
+                .startDate(bookingRequest.getStartDate())
+                .endDate(bookingRequest.getEndDate())
+                .build();
     }
 }

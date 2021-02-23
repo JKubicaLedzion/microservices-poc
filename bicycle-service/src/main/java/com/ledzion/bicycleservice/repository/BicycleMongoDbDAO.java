@@ -1,6 +1,7 @@
 package com.ledzion.bicycleservice.repository;
 
 import com.ledzion.bicycleservice.model.Bicycle;
+import com.ledzion.bicycleservice.model.BookingParameters;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -25,19 +26,7 @@ public class BicycleMongoDbDAO implements BicycleDAO {
     }
 
     @Override
-    public List<Bicycle> getBicyclesByTypesSizes( List<String> type, List<String> size )
-    {
-        return null;
-    }
-
-    @Override
-    public boolean findAndBookBicycle(long userId, String type, String size, LocalDate startDate,
-            LocalDate endDate) {
-        return false;
-    }
-
-    @Override
-    public boolean bookBicycle(long userId, long id, LocalDate startDate, LocalDate endDate) {
+    public boolean bookBicycle(BookingParameters bookingParameters) {
         return false;
     }
 

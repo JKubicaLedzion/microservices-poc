@@ -26,6 +26,6 @@ public enum Type {
         return Arrays.stream(Type.values())
                 .filter(t -> typeDescription.equals(t.getTypeDescription()))
                 .findAny()
-                .orElseThrow(() -> new NoSuchElementException("Wrong type rate provided."));
+                .orElseThrow(() -> new NoSuchElementException("Wrong type provided."));
     }
 }
