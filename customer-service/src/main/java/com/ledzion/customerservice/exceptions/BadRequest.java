@@ -1,4 +1,4 @@
-package com.ledzion.bookingservice.exception;
+package com.ledzion.customerservice.exceptions;
 
 public class BadRequest extends RuntimeException {
 

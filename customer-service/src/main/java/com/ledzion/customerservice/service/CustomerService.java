@@ -10,9 +10,11 @@ import java.util.Optional;
 
 public interface CustomerService {
 
-    Optional<Customer> getCustomerById(long id);
+    Optional<Customer> getCustomerById(String id);
 
     List<Customer> getAllCustomers();
 
     boolean addBooking(BookingParameters bookingParameters);
+
+    boolean addCustomer(Customer customer);
 }

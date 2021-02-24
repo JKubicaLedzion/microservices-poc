@@ -69,7 +69,6 @@ public class BookingService {
         }
     }
 
-
     private BookingParameters prepareBookingParameters(BookingRequest bookingRequest, long bicycleId){
         return BookingParameters.builder()
                 .userId(bookingRequest.getUserId())

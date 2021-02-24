@@ -9,9 +9,11 @@ import java.util.Optional;
 
 public interface CustomerDAO {
 
-    Optional<Customer> getCustomerById(long id);
+    Optional<Customer> getCustomerById(String id);
 
     List<Customer> getAllCustomers();
 
-    boolean addBooking(BookingParameters bookingParameters);
+    boolean addBooking(Customer customer);
+
+    boolean addCustomer(Customer customer);
 }
