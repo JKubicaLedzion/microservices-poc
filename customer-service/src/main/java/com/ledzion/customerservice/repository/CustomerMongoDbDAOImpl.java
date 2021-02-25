@@ -28,7 +28,7 @@ public class CustomerMongoDbDAOImpl implements  CustomerDAO{
     public List<Customer> getAllCustomers() {
         return customerMongoDbRepository.findAll();
     }
-    
+
     @Override
     public boolean addBooking(Customer customer) {
         return customerMongoDbRepository.save(customer).equals(customer);

@@ -21,10 +21,11 @@ import java.util.Optional;
 @Service
 public class CustomerServiceImpl implements CustomerService {
 
-    private static final String CUSTOMER_WITH_PROVIDED_ID_DOESN_T_EXISTS = "Customer with provided Id doesn't exists.";
     private CustomerDAO customerDAO;
 
     private static final String END_DATE_IS_AFTER_START_DATE = "End date is after start date.";
+
+    private static final String CUSTOMER_WITH_PROVIDED_ID_DOESN_T_EXISTS = "Customer with provided Id doesn't exists.";
 
     @Autowired
     public CustomerServiceImpl(CustomerDAO customerDAO) {
@@ -45,11 +46,11 @@ public class CustomerServiceImpl implements CustomerService {
     public boolean addBooking(BookingParameters bookingParameters) {
         validateBookingDates(bookingParameters);
 
-        Customer customer = getCustomerById(bookingParameters.getUserId()).get();
-        if(customer == null) {
+        if(!getCustomerById(bookingParameters.getUserId()).isPresent()) {
             throw new BadRequest(CUSTOMER_WITH_PROVIDED_ID_DOESN_T_EXISTS);
         }
 
+        Customer customer = getCustomerById(bookingParameters.getUserId()).get();
         BookingPeriod bookingPeriod = new BookingPeriod(bookingParameters.getStartDate(), bookingParameters.getEndDate());
         Map<String, List<BookingPeriod>> customerBookings = customer.getBookings();
         if(customerBookings == null || customerBookings.isEmpty()) {

@@ -9,13 +9,15 @@ import java.util.Optional;
 
 public interface BicycleService {
 
-    boolean bicycleAvailable(long id, LocalDate startDate, LocalDate endDate);
+    boolean bicycleAvailable(String id, LocalDate startDate, LocalDate endDate);
 
-    Optional<Bicycle> getBicycleById(long id);
+    Optional<Bicycle> getBicycleById(String id);
 
     List<Bicycle> getAllBicycles();
 
     boolean bookBicycle(BookingParameters bookingParameters);
 
     List<Bicycle> getBicyclesByTypeSize(String type, String size);
+
+    boolean addBicycle(Bicycle bicycle);
 }

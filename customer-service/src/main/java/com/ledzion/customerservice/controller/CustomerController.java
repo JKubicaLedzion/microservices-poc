@@ -87,7 +87,7 @@ public class CustomerController {
     }
 
 //    @HystrixCommand(fallbackMethod = "addCustomerFallback")
-    @PostMapping()
+    @PostMapping
     public ResponseEntity addCustomer(@RequestBody @Valid Customer customer) {
         LOGGER.debug("Adding customer: " + customer.toString() + ".");
         if(customer == null) {
