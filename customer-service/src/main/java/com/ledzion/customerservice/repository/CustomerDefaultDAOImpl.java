@@ -1,9 +1,8 @@
 package com.ledzion.customerservice.repository;
 
 import com.ledzion.customerservice.model.Address;
-import com.ledzion.customerservice.model.BookingParameters;
-import com.ledzion.customerservice.model.BookingPeriod;
 import com.ledzion.customerservice.model.Customer;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
@@ -11,7 +10,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-//@Repository
+@Repository
+@ConditionalOnProperty(name = "com.ledzion.customerservice.CustomerDAO", havingValue = "default")
 public class CustomerDefaultDAOImpl implements CustomerDAO {
 
     private final List<Customer> customers = new ArrayList<>(Arrays.asList(

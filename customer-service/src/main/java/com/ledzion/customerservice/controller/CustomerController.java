@@ -2,13 +2,11 @@ package com.ledzion.customerservice.controller;
 
 import com.ledzion.customerservice.model.BookingParameters;
 import com.ledzion.customerservice.model.Customer;
-import com.ledzion.customerservice.repository.CustomerDAO;
 import com.ledzion.customerservice.service.CustomerService;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,8 +18,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -42,8 +38,6 @@ public class CustomerController {
     private static final String SERVICE_UNAVAILABLE_ERROR_MESSAGE =
             "No Response From Customer Service at this moment. " + " Service will be back shortly.";
 
-
-
     private static final String BOOKING_DETAILS_MISSING = "Booking details missing.";
 
     private static final Object CUSTOMER_ADDED = "Customer added.";
@@ -55,7 +49,7 @@ public class CustomerController {
         this.customerService = customerService;
     }
 
-//    @HystrixCommand(fallbackMethod = "getCustomerByIdFallback")
+    @HystrixCommand(fallbackMethod = "getCustomerByIdFallback")
     @GetMapping(value = "/{id}")
     public ResponseEntity getCustomerById(@PathVariable("id") String id) {
         LOGGER.debug("Getting customer with id {}.", id);
@@ -65,7 +59,7 @@ public class CustomerController {
                 : ResponseEntity.status(HttpStatus.NOT_FOUND).body(CUSTOMER_NOT_FOUND);
     }
 
-//    @HystrixCommand(fallbackMethod = "getAllCustomersFallback")
+    @HystrixCommand(fallbackMethod = "getAllCustomersFallback")
     @GetMapping
     public ResponseEntity getAllCustomers() {
         LOGGER.debug("Getting all customers.");
@@ -74,8 +68,8 @@ public class CustomerController {
                 ? ResponseEntity.status(HttpStatus.NOT_FOUND).body(CUSTOMER_NOT_FOUND)
                 : ResponseEntity.status(HttpStatus.OK).body(customers);
     }
-//
-//    @HystrixCommand(fallbackMethod = "addBookingFallback")
+
+    @HystrixCommand(fallbackMethod = "addBookingFallback")
     @PutMapping("/booking")
     public ResponseEntity addBooking(@RequestBody @Valid BookingParameters bookingParameters) {
         LOGGER.debug("Adding bicycle booking with start date {} and end date {} for customer with Id {}.",
@@ -86,7 +80,7 @@ public class CustomerController {
                 : ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ERROR_WHILE_ADDING_BOOKING);
     }
 
-//    @HystrixCommand(fallbackMethod = "addCustomerFallback")
+    @HystrixCommand(fallbackMethod = "addCustomerFallback")
     @PostMapping
     public ResponseEntity addCustomer(@RequestBody @Valid Customer customer) {
         LOGGER.debug("Adding customer: " + customer.toString() + ".");
@@ -98,23 +92,23 @@ public class CustomerController {
                 : ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ERROR_WHILE_ADDING_CUSTOMER);
     }
 
-//    @SuppressWarnings("unused")
-//    public ResponseEntity getCustomerByIdFallback(String id) {
-//        return ResponseEntity.ok().body(SERVICE_UNAVAILABLE_ERROR_MESSAGE);
-//    }
+    @SuppressWarnings("unused")
+    public ResponseEntity getCustomerByIdFallback(String id) {
+        return ResponseEntity.ok().body(SERVICE_UNAVAILABLE_ERROR_MESSAGE);
+    }
 
-//    @SuppressWarnings("unused")
-//    public ResponseEntity getAllCustomersFallback() {
-//        return ResponseEntity.ok().body(SERVICE_UNAVAILABLE_ERROR_MESSAGE);
-//    }
+    @SuppressWarnings("unused")
+    public ResponseEntity getAllCustomersFallback() {
+        return ResponseEntity.ok().body(SERVICE_UNAVAILABLE_ERROR_MESSAGE);
+    }
 
-//    @SuppressWarnings("unused")
-//    public ResponseEntity addBookingFallback(BookingParameters bookingParameters) {
-//        return ResponseEntity.ok().body(SERVICE_UNAVAILABLE_ERROR_MESSAGE);
-//    }
+    @SuppressWarnings("unused")
+    public ResponseEntity addBookingFallback(BookingParameters bookingParameters) {
+        return ResponseEntity.ok().body(SERVICE_UNAVAILABLE_ERROR_MESSAGE);
+    }
 
-//    @SuppressWarnings("unused")
-//    public ResponseEntity addCustomerFallback(Customer customer) {
-//        return ResponseEntity.ok().body(SERVICE_UNAVAILABLE_ERROR_MESSAGE);
-//    }
+    @SuppressWarnings("unused")
+    public ResponseEntity addCustomerFallback(Customer customer) {
+        return ResponseEntity.ok().body(SERVICE_UNAVAILABLE_ERROR_MESSAGE);
+    }
 }

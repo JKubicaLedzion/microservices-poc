@@ -5,6 +5,8 @@ import com.ledzion.bicycleservice.model.Bicycle;
 import com.ledzion.bicycleservice.model.BookingPeriod;
 import com.ledzion.bicycleservice.model.Size;
 import com.ledzion.bicycleservice.model.Type;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -16,7 +18,8 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-//@Repository
+@Repository
+@ConditionalOnProperty(name = "com.ledzion.bicycleservice.BicycleDAO", havingValue = "default")
 public class BicycleDefaultDAO implements BicycleDAO {
 
     private static final String WRONG_BICYCLE_ID_PROVIDED = "Wrong bicycle Id provided.";

@@ -4,8 +4,6 @@ import com.ledzion.bicycleservice.exceptions.BadRequest;
 import com.ledzion.bicycleservice.model.Bicycle;
 import com.ledzion.bicycleservice.model.BookingParameters;
 import com.ledzion.bicycleservice.model.BookingPeriod;
-import com.ledzion.bicycleservice.model.Size;
-import com.ledzion.bicycleservice.model.Type;
 import com.ledzion.bicycleservice.repository.BicycleDAO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

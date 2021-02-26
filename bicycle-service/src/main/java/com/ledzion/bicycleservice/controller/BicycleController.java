@@ -2,7 +2,6 @@ package com.ledzion.bicycleservice.controller;
 
 import com.ledzion.bicycleservice.model.Bicycle;
 import com.ledzion.bicycleservice.model.BookingParameters;
-import com.ledzion.bicycleservice.model.Size;
 import com.ledzion.bicycleservice.service.BicycleService;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import org.slf4j.Logger;
@@ -48,10 +47,6 @@ public class BicycleController {
     private static final String SERVICE_UNAVAILABLE_ERROR_MESSAGE =
             "No Response From Bicycle Service at this moment. " + " Service will be back shortly.";
 
-    private static final String END_DATE_IS_AFTER_START_DATE = "End date is after start date.";
-
-    private static final String BOOKING_DETAILS_MISSING = "Booking details missing.";
-
     private BicycleService bicycleService;
 
     @Autowired
@@ -59,18 +54,17 @@ public class BicycleController {
         this.bicycleService = bicycleService;
     }
 
-//    @HystrixCommand(fallbackMethod = "getBicycleByIdFallback")
+    @HystrixCommand(fallbackMethod = "getBicycleByIdFallback")
     @GetMapping(value = "/{id}")
     public ResponseEntity getBicycleById(@PathVariable("id") String id) {
         LOGGER.debug("Getting bicycles with id {}.", id);
-        String test = Size.S.toString();
         Optional<Bicycle> bicycle = bicycleService.getBicycleById(id);
         return bicycle.isPresent()
                 ? ResponseEntity.status(HttpStatus.OK).body(bicycle.get())
                 : ResponseEntity.status(HttpStatus.NOT_FOUND).body(BICYCLE_NOT_FOUND);
     }
 
-//    @HystrixCommand(fallbackMethod = "getAllBicyclesFallback")
+    @HystrixCommand(fallbackMethod = "getAllBicyclesFallback")
     @GetMapping
     public ResponseEntity getAllBicycles() {
         LOGGER.debug("Getting all bicycles.");
@@ -80,7 +74,7 @@ public class BicycleController {
                 : ResponseEntity.status(HttpStatus.OK).body(bicycles);
     }
 
-//    @HystrixCommand(fallbackMethod = "getBicyclesByTypeSizeFallback")
+    @HystrixCommand(fallbackMethod = "getBicyclesByTypeSizeFallback")
     @GetMapping(value = "filter")
     public ResponseEntity getBicyclesByTypeSize(
             @RequestParam(name = "type", required = false) String type,
@@ -92,7 +86,7 @@ public class BicycleController {
                 : ResponseEntity.status(HttpStatus.OK).body(bicycles);
     }
 
-//    @HystrixCommand(fallbackMethod = "bookBicycleFallback")
+    @HystrixCommand(fallbackMethod = "bookBicycleFallback")
     @PutMapping(value = "/booking")
     public ResponseEntity<String> bookBicycle(@RequestBody @Valid BookingParameters bookingParameters) {
         LOGGER.debug("Booking bicycles with id {} for customer {}.", bookingParameters.getBicycleId(),
@@ -102,7 +96,7 @@ public class BicycleController {
                 : ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ERROR_WHILE_BOOKING_BICYCLE);
     }
 
-//    @HystrixCommand(fallbackMethod = "bicycleAvailableFallback")
+    @HystrixCommand(fallbackMethod = "bicycleAvailableFallback")
     @GetMapping(value = "/{id}/availability")
     public ResponseEntity<String> bicycleAvailable(
             @PathVariable(name = "id") String id,
@@ -114,7 +108,7 @@ public class BicycleController {
                 : ResponseEntity.status(HttpStatus.NOT_FOUND).body(BICYCLE_UNAVAILABLE);
     }
 
-    //    @HystrixCommand(fallbackMethod = "addBicycleFallback")
+        @HystrixCommand(fallbackMethod = "addBicycleFallback")
     @PostMapping
     public ResponseEntity<String> addBicycle(@RequestBody @Valid Bicycle bicycle) {
         LOGGER.debug("Adding bicycle with id {}.", bicycle.getId());
@@ -123,28 +117,28 @@ public class BicycleController {
                 : ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ERROR_WHILE_ADDING_BICYCLE);
     }
 
-//    @SuppressWarnings("unused")
-//    public ResponseEntity getBicycleByIdFallback(long id) {
-//        return ResponseEntity.ok().body(SERVICE_UNAVAILABLE_ERROR_MESSAGE);
-//    }
+    @SuppressWarnings("unused")
+    public ResponseEntity getBicycleByIdFallback(String id) {
+        return ResponseEntity.ok().body(SERVICE_UNAVAILABLE_ERROR_MESSAGE);
+    }
 
-//    @SuppressWarnings("unused")
-//    public ResponseEntity getAllBicyclesFallback() {
-//        return ResponseEntity.ok().body(SERVICE_UNAVAILABLE_ERROR_MESSAGE);
-//    }
-//
-//    @SuppressWarnings("unused")
-//    public ResponseEntity getBicyclesByTypeSizeFallback(String type, String size) {
-//        return ResponseEntity.ok().body(SERVICE_UNAVAILABLE_ERROR_MESSAGE);
-//    }
-//
-//    @SuppressWarnings("unused")
-//    public ResponseEntity<String> bookBicycleFallback(BookingParameters bookingParameters) {
-//        return ResponseEntity.ok().body(SERVICE_UNAVAILABLE_ERROR_MESSAGE);
-//    }
-//
-//    @SuppressWarnings("unused")
-//    public ResponseEntity<String> bicycleAvailableFallback(long bicycleId, LocalDate startDate, LocalDate endDate) {
-//        return ResponseEntity.ok().body(SERVICE_UNAVAILABLE_ERROR_MESSAGE);
-//    }
+    @SuppressWarnings("unused")
+    public ResponseEntity getAllBicyclesFallback() {
+        return ResponseEntity.ok().body(SERVICE_UNAVAILABLE_ERROR_MESSAGE);
+    }
+
+    @SuppressWarnings("unused")
+    public ResponseEntity getBicyclesByTypeSizeFallback(String type, String size) {
+        return ResponseEntity.ok().body(SERVICE_UNAVAILABLE_ERROR_MESSAGE);
+    }
+
+    @SuppressWarnings("unused")
+    public ResponseEntity<String> bookBicycleFallback(BookingParameters bookingParameters) {
+        return ResponseEntity.ok().body(SERVICE_UNAVAILABLE_ERROR_MESSAGE);
+    }
+
+    @SuppressWarnings("unused")
+    public ResponseEntity<String> bicycleAvailableFallback(String bicycleId, LocalDate startDate, LocalDate endDate) {
+        return ResponseEntity.ok().body(SERVICE_UNAVAILABLE_ERROR_MESSAGE);
+    }
 }

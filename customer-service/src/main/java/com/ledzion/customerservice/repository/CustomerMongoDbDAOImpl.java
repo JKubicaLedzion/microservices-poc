@@ -1,19 +1,15 @@
 package com.ledzion.customerservice.repository;
 
-import com.ledzion.customerservice.model.BookingParameters;
-import com.ledzion.customerservice.model.BookingPeriod;
 import com.ledzion.customerservice.model.Customer;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Repository;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 @Repository
+@ConditionalOnProperty(name = "com.ledzion.customerservice.CustomerDAO", havingValue = "MongoDb")
 public class CustomerMongoDbDAOImpl implements  CustomerDAO{
 
     @Autowired

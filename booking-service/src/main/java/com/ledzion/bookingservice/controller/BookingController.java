@@ -1,8 +1,7 @@
 package com.ledzion.bookingservice.controller;
 
 import com.ledzion.bookingservice.model.BookingRequest;
-import com.ledzion.bookingservice.service.BookingService;
-import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
+import com.ledzion.bookingservice.service.BookingServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,27 +22,18 @@ public class BookingController {
 
     private static final String BICYCLE_BOOKED = "Bicycle booked.";
 
-    private static final String BICYCLE_AVAILABLE = "Bicycle available.";
-
-    private static final String BICYCLE_UNAVAILABLE = "Bicycle unavailable.";
-
     private static final String ERROR_WHILE_BOOKING_BICYCLE = "Error while booking bicycle. Provided data incorrect.";
 
-    private static final String END_DATE_IS_AFTER_START_DATE = "End date is after start date.";
-
-    private static final String BOOKING_DETAILS_MISSING = "Booking details missing.";
-
     @Autowired
-    private BookingService bookingService;
+    private BookingServiceImpl bookingServiceImpl;
 
-    //TODO: add possibility that size or type is empty
     @PutMapping
     public ResponseEntity<String> bookBicycle(@RequestBody @Valid BookingRequest bookingRequest) {
         LOGGER.debug("Booking bicycles of type {} and sie {} for customer with id {} for period: start date = {},"
                 + " end date = {}.", bookingRequest.getType(), bookingRequest.getSize(),
                 bookingRequest.getUserId(), bookingRequest.getStartDate(),
                 bookingRequest.getEndDate());
-        return bookingService.bookBicycle(bookingRequest)
+        return bookingServiceImpl.bookBicycle(bookingRequest)
                 ? ResponseEntity.status(HttpStatus.OK).body(BICYCLE_BOOKED)
                 : ResponseEntity.status(HttpStatus.OK).body(ERROR_WHILE_BOOKING_BICYCLE);
     }

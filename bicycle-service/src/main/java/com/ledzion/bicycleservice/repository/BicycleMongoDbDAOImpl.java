@@ -2,9 +2,9 @@ package com.ledzion.bicycleservice.repository;
 
 import com.ledzion.bicycleservice.exceptions.BadRequest;
 import com.ledzion.bicycleservice.model.Bicycle;
-import com.ledzion.bicycleservice.model.BookingParameters;
 import com.ledzion.bicycleservice.model.BookingPeriod;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
@@ -14,9 +14,11 @@ import java.util.Map;
 import java.util.Optional;
 
 @Repository
+@ConditionalOnProperty(name = "com.ledzion.bicycleservice.BicycleDAO", havingValue = "MongoDb")
 public class BicycleMongoDbDAOImpl implements  BicycleDAO{
 
     private static final String WRONG_BICYCLE_ID_PROVIDED = "Wrong bicycle Id provided.";
+
     @Autowired
     private BicycleMongoDbRepository bicycleMongoDbRepository;
 
@@ -66,11 +68,6 @@ public class BicycleMongoDbDAOImpl implements  BicycleDAO{
         }
         return bicycleMongoDbRepository.findByTypeAndSize(type, size);
     }
-
-//    @Override
-//    public List<Bicycle> getBicyclesByTypeSize(String type, String size) {
-//        return bicycleMongoDbRepository.findUsingQuery(type, size);
-//    }
 
     @Override
     public boolean addBicycle(Bicycle bicycle) {

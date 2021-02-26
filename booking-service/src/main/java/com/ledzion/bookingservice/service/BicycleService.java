@@ -20,10 +20,10 @@ import java.util.Objects;
 @Service
 public class BicycleService {
 
+    private static final String BICYCLE_SERVICE_URL = "http://bicycle-service/bicycles/";
+
     @Autowired
     private RestTemplate restTemplate;
-
-    private static final String BICYCLE_SERVICE_URL = "http://bicycle-service/bicycles/";
 
     public List<Bicycle> getBicyclesByTypeSize(String type, String size) {
         List<Bicycle> bicycles = new ArrayList<>();

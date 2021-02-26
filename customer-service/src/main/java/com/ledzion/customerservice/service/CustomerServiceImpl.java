@@ -5,14 +5,11 @@ import com.ledzion.customerservice.model.BookingParameters;
 import com.ledzion.customerservice.model.BookingPeriod;
 import com.ledzion.customerservice.model.Customer;
 import com.ledzion.customerservice.repository.CustomerDAO;
-import com.ledzion.customerservice.repository.CustomerMongoDbRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -21,11 +18,11 @@ import java.util.Optional;
 @Service
 public class CustomerServiceImpl implements CustomerService {
 
-    private CustomerDAO customerDAO;
-
     private static final String END_DATE_IS_AFTER_START_DATE = "End date is after start date.";
 
     private static final String CUSTOMER_WITH_PROVIDED_ID_DOESN_T_EXISTS = "Customer with provided Id doesn't exists.";
+
+    private CustomerDAO customerDAO;
 
     @Autowired
     public CustomerServiceImpl(CustomerDAO customerDAO) {
