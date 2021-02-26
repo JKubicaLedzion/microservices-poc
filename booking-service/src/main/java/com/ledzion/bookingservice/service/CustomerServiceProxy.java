@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 public interface CustomerServiceProxy {
 
     @GetMapping("/customers/{id}")
-    Customer getCustomerById(@PathVariable(name = "id") long id);
+    Customer getCustomerById(@PathVariable(name = "id") String id);
 
     @PutMapping("/customers/booking")
     void addBooking(@RequestBody BookingParameters bookingParameters);

@@ -8,8 +8,8 @@ import java.util.Map;
 @Data
 public class Bicycle {
 
-    private long id;
+    private String id;
     private Type type;
     private Size size;
-    private Map<Long, List<BookingPeriod>> bookings;
+    private Map<String, List<BookingPeriod>> bookings;
 }

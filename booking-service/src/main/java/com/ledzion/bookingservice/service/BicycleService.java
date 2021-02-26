@@ -20,10 +20,10 @@ import java.util.Objects;
 @Service
 public class BicycleService {
 
+    private static final String BICYCLE_SERVICE_URL = "http://bicycle-service/bicycles/";
+
     @Autowired
     private RestTemplate restTemplate;
-
-    private static final String BICYCLE_SERVICE_URL = "http://bicycle-service/bicycles/";
 
     public List<Bicycle> getBicyclesByTypeSize(String type, String size) {
         List<Bicycle> bicycles = new ArrayList<>();
@@ -41,7 +41,7 @@ public class BicycleService {
         return bicycles;
     }
 
-    public boolean bicycleAvailable(long id, LocalDate startDate, LocalDate endDate) {
+    public boolean bicycleAvailable(String id, LocalDate startDate, LocalDate endDate) {
         try {
             return restTemplate.exchange(BICYCLE_SERVICE_URL + id + getAvailabilityUrlPart(startDate, endDate),
                     HttpMethod.GET, null, String.class).getStatusCode().equals(HttpStatus.OK);
