@@ -65,6 +65,7 @@ public class CustomerServiceImpl implements CustomerService {
             bicycleBookings.add(bookingPeriod);
             customer.getBookings().put(bookingParameters.getBicycleId(), bicycleBookings);
         }
+
         return customerDAO.addBooking(customer);
     }
 

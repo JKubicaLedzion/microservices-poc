@@ -10,8 +10,9 @@ import java.time.LocalDate;
 @Data
 public class BookingParameters {
 
-    private long userId;
-    private long bicycleId;
+    private String userId;
+
+    private String bicycleId;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate startDate;

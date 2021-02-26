@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
+
 @RestController
 @RequestMapping("/bookings")
 public class BookingController {
@@ -36,19 +38,11 @@ public class BookingController {
 
     //TODO: add possibility that size or type is empty
     @PutMapping
-    public ResponseEntity<String> bookBicycle(@RequestBody BookingRequest bookingRequest) {
+    public ResponseEntity<String> bookBicycle(@RequestBody @Valid BookingRequest bookingRequest) {
         LOGGER.debug("Booking bicycles of type {} and sie {} for customer with id {} for period: start date = {},"
                 + " end date = {}.", bookingRequest.getType(), bookingRequest.getSize(),
                 bookingRequest.getUserId(), bookingRequest.getStartDate(),
                 bookingRequest.getEndDate());
-
-        if(bookingRequest.getStartDate() == null || bookingRequest.getEndDate() == null) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(BOOKING_DETAILS_MISSING);
-        }
-        if(bookingRequest.getEndDate().isBefore(bookingRequest.getStartDate())) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(END_DATE_IS_AFTER_START_DATE);
-        }
-
         return bookingService.bookBicycle(bookingRequest)
                 ? ResponseEntity.status(HttpStatus.OK).body(BICYCLE_BOOKED)
                 : ResponseEntity.status(HttpStatus.OK).body(ERROR_WHILE_BOOKING_BICYCLE);

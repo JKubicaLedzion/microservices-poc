@@ -10,8 +10,13 @@ import feign.FeignException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.Optional;
+
 @Service
 public class BookingService {
+
+    private static final String END_DATE_IS_AFTER_START_DATE = "End date is after start date.";
 
     @Autowired
     private CustomerServiceProxy customerServiceProxy;
@@ -20,26 +25,51 @@ public class BookingService {
     private BicycleService bicycleService;
 
     public boolean bookBicycle(BookingRequest bookingRequest) {
+        validateBookingDates(bookingRequest);
+
         // get user and check if exists
         Customer customer = getCustomer(bookingRequest);
-
         if(customer == null) {
             return false;
         }
 
         // check if bicycle exists for given type, size
-        Bicycle bicycle = bicycleService.getBicyclesByTypeSize(bookingRequest.getType(), bookingRequest.getSize()).get(0);
-
-        // if exists - check bicycle availability
-        if(!bicycleService.bicycleAvailable(bicycle.getId(), bookingRequest.getStartDate(), bookingRequest.getEndDate())) {
+        List<Bicycle> bicycles = bicycleService.getBicyclesByTypeSize(bookingRequest.getType(), bookingRequest.getSize());
+        if(bicycles == null || bicycles.isEmpty()) {
             return false;
         }
 
+        // if exists - check bicycle availability
+
+
+        Optional<Bicycle> availableBicycle = bicycles.stream().filter(bicycle -> {
+            try {
+                bicycleService.bicycleAvailable(bicycle.getId(), bookingRequest.getStartDate(), bookingRequest.getEndDate());
+                return true;
+            } catch (BadRequest e) {
+            }
+            return false;
+        }).findFirst();
+
+        if(!availableBicycle.isPresent()) {
+            return false;
+        }
+
+//        Bicycle availableBicycle = new Bicycle();
+//        for (Bicycle bicycle : bicycles) {
+//            try{
+//                bicycleService.bicycleAvailable(bicycle.getId(), bookingRequest.getStartDate(), bookingRequest.getEndDate());
+//                availableBicycle = bicycle;
+//                break;
+//            } catch (BadRequest e) {
+//            }
+//        }
+
         // add booking for customer
-        addBookingForCustomer(prepareBookingParameters(bookingRequest, bicycle.getId()));
+        addBookingForCustomer(prepareBookingParameters(bookingRequest, availableBicycle.get().getId()));
 
         // add booking for bicycle
-        bicycleService.addBooking(prepareBookingParameters(bookingRequest, bicycle.getId()));
+        bicycleService.addBooking(prepareBookingParameters(bookingRequest, availableBicycle.get().getId()));
         return true;
     }
 
@@ -69,12 +99,18 @@ public class BookingService {
         }
     }
 
-    private BookingParameters prepareBookingParameters(BookingRequest bookingRequest, long bicycleId){
+    private BookingParameters prepareBookingParameters(BookingRequest bookingRequest, String bicycleId){
         return BookingParameters.builder()
                 .userId(bookingRequest.getUserId())
                 .bicycleId(bicycleId)
                 .startDate(bookingRequest.getStartDate())
                 .endDate(bookingRequest.getEndDate())
                 .build();
+    }
+
+    private void validateBookingDates(BookingRequest bookingRequest) {
+        if(bookingRequest.getStartDate().isAfter(bookingRequest.getEndDate())) {
+            throw new BadRequest(END_DATE_IS_AFTER_START_DATE);
+        }
     }
 }

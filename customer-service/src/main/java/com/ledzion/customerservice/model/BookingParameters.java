@@ -21,11 +21,11 @@ public class BookingParameters {
     @NotBlank(message = "Bicycle Id should be provided.")
     private String bicycleId;
 
-    @NotNull(message = "Booking period start date should be provided.")
+    @NotNull(message = "Start date should be provided.")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate startDate;
 
-    @NotNull(message = "Booking period end date should be provided.")
+    @NotNull(message = "End date should be provided.")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate endDate;
 }

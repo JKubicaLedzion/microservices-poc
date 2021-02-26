@@ -41,7 +41,7 @@ public class BicycleService {
         return bicycles;
     }
 
-    public boolean bicycleAvailable(long id, LocalDate startDate, LocalDate endDate) {
+    public boolean bicycleAvailable(String id, LocalDate startDate, LocalDate endDate) {
         try {
             return restTemplate.exchange(BICYCLE_SERVICE_URL + id + getAvailabilityUrlPart(startDate, endDate),
                     HttpMethod.GET, null, String.class).getStatusCode().equals(HttpStatus.OK);

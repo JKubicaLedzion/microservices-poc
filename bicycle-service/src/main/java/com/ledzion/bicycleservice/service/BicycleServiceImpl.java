@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -56,17 +57,25 @@ public class BicycleServiceImpl implements BicycleService {
 
         Bicycle bicycle = getBicycleById(bookingParameters.getBicycleId()).get();
         BookingPeriod bookingPeriod = new BookingPeriod(bookingParameters.getStartDate(), bookingParameters.getEndDate());
-        if (!bicycleAvailable(bookingParameters.getBicycleId(), bookingParameters.getStartDate(),
-                bookingParameters.getEndDate())) {
-            throw new BadRequest(BICYCLE_UNAVAILABLE);
+
+        Map<String, List<BookingPeriod>> bicycleBookings = bicycle.getBookings();
+        if(bicycleBookings == null || bicycleBookings.isEmpty()) {
+            bicycle.setBookings(new HashMap<>());
+        } else {
+            if (!bicycleAvailable(bookingParameters.getBicycleId(), bookingParameters.getStartDate(),
+                    bookingParameters.getEndDate())) {
+                throw new BadRequest(BICYCLE_UNAVAILABLE);
+            }
         }
 
         List<BookingPeriod> customerBookings = bicycle.getBookings().get(bookingParameters.getUserId());
         if(customerBookings == null || customerBookings.isEmpty()) {
             bicycle.getBookings().put(bookingParameters.getUserId(), new ArrayList<>(Arrays.asList(bookingPeriod)));
+        } else {
+            customerBookings.add(bookingPeriod);
+            bicycle.getBookings().put(bookingParameters.getBicycleId(), customerBookings);
         }
-        customerBookings.add(bookingPeriod);
-        bicycle.getBookings().put(bookingParameters.getBicycleId(), customerBookings);
+
         return bicycleDAO.bookBicycle(bicycle);
     }
 

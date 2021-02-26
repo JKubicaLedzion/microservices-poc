@@ -2,6 +2,7 @@ package com.ledzion.bicycleservice.controller;
 
 import com.ledzion.bicycleservice.model.Bicycle;
 import com.ledzion.bicycleservice.model.BookingParameters;
+import com.ledzion.bicycleservice.model.Size;
 import com.ledzion.bicycleservice.service.BicycleService;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import org.slf4j.Logger;
@@ -62,6 +63,7 @@ public class BicycleController {
     @GetMapping(value = "/{id}")
     public ResponseEntity getBicycleById(@PathVariable("id") String id) {
         LOGGER.debug("Getting bicycles with id {}.", id);
+        String test = Size.S.toString();
         Optional<Bicycle> bicycle = bicycleService.getBicycleById(id);
         return bicycle.isPresent()
                 ? ResponseEntity.status(HttpStatus.OK).body(bicycle.get())

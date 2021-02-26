@@ -8,7 +8,7 @@ import java.util.Map;
 @Data
 public class Customer {
 
-    private long id;
+    private String id;
     private String name;
     private String phone;
     private String email;

@@ -28,4 +28,10 @@ public enum Type {
                 .findAny()
                 .orElseThrow(() -> new NoSuchElementException("Wrong type provided."));
     }
+
+
+    @Override
+    public String toString() {
+        return getTypeDescription();
+    }
 }
