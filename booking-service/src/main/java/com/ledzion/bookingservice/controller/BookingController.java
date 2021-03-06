@@ -18,19 +18,16 @@ import javax.validation.Valid;
 @RequestMapping("/bookings")
 public class BookingController {
 
-    private final Logger LOGGER = LoggerFactory.getLogger(BookingController.class);
-
     private static final String BICYCLE_BOOKED = "Bicycle booked.";
-
     private static final String ERROR_WHILE_BOOKING_BICYCLE = "Error while booking bicycle. Provided data incorrect.";
-
+    private final Logger LOGGER = LoggerFactory.getLogger(BookingController.class);
     @Autowired
     private BookingServiceImpl bookingServiceImpl;
 
     @PutMapping
     public ResponseEntity<String> bookBicycle(@RequestBody @Valid BookingRequest bookingRequest) {
         LOGGER.debug("Booking bicycles of type {} and sie {} for customer with id {} for period: start date = {},"
-                + " end date = {}.", bookingRequest.getType(), bookingRequest.getSize(),
+                        + " end date = {}.", bookingRequest.getType(), bookingRequest.getSize(),
                 bookingRequest.getUserId(), bookingRequest.getStartDate(),
                 bookingRequest.getEndDate());
         return bookingServiceImpl.bookBicycle(bookingRequest)

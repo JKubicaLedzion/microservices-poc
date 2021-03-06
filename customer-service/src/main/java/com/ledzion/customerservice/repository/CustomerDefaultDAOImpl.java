@@ -6,7 +6,6 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -14,7 +13,7 @@ import java.util.Optional;
 @ConditionalOnProperty(name = "com.ledzion.customerservice.CustomerDAO", havingValue = "default")
 public class CustomerDefaultDAOImpl implements CustomerDAO {
 
-    private final List<Customer> customers = new ArrayList<>(Arrays.asList(
+    private final List<Customer> customers = new ArrayList<>(List.of(
             new Customer("1", "Jan Kowalski", "+48 234234234", "kowaslki@abc.com",
                     new Address("City", "PL", "00-000", "Street", "12")),
             new Customer("2", "Anna Kowalska", "+48 234234567", "kowaslka@abc.com",

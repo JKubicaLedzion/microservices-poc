@@ -14,10 +14,6 @@ public enum Size {
         this.sizeDescription = sizeDescription;
     }
 
-    public String getSizeDescription() {
-        return sizeDescription;
-    }
-
     public static Size getSize(String sizeDescription) {
         return Arrays.stream(Size.values())
                 .filter(s -> sizeDescription.equals(s.getSizeDescription()))
@@ -27,6 +23,9 @@ public enum Size {
 
     }
 
+    public String getSizeDescription() {
+        return sizeDescription;
+    }
 
     @Override
     public String toString() {
