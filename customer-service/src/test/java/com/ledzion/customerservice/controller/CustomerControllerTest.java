@@ -31,6 +31,7 @@ import java.util.Optional;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -120,37 +121,37 @@ public class CustomerControllerTest {
                                 + getJsonFormatStringForCustomer(customers.get(1)) + "]")));
     }
 
-//    @Test
-//    public void addBookingShouldReturnOkResponseAndContentWithMessage() throws Exception {
-//        // given:
-//        Mockito.when(customerService.addBooking(bookingParameters)).thenReturn(true);
-//
-//        // when:
-//        mvc.perform(put(PATH + "booking")
-//                .content(getJsonFormatStringForBookingParameters(bookingParameters))
-//                .contentType(MediaType.APPLICATION_JSON)
-//                .accept(MediaType.APPLICATION_JSON))
-//                .andDo(MockMvcResultHandlers.print())
-//                //then:
-//                .andExpect(status().isOk())
-//                .andExpect(content().string(is("Bicycle booking added.")));
-//    }
-//
-//    @Test
-//    public void addBookingShouldReturnBadRequestAndContentWithMessage() throws Exception {
-//        // given:
-//        Mockito.when(customerService.addBooking(bookingParameters)).thenReturn(false);
-//
-//        // when:
-//        mvc.perform(put(PATH + "booking")
-//                .content(getJsonFormatStringForBookingParameters(bookingParameters))
-//                .contentType(MediaType.APPLICATION_JSON)
-//                .accept(MediaType.APPLICATION_JSON))
-//                .andDo(MockMvcResultHandlers.print())
-//                //then:
-//                .andExpect(status().isBadRequest())
-//                .andExpect(content().string(is("Error while adding bicycle booking. Provided data incorrect.")));
-//    }
+    @Test
+    public void addBookingShouldReturnOkResponseAndContentWithMessage() throws Exception {
+        // given:
+        Mockito.when(customerService.addBooking(bookingParameters)).thenReturn(true);
+
+        // when:
+        mvc.perform(put(PATH + "booking")
+                .content(getJsonFormatStringForBookingParameters(bookingParameters))
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+                .andDo(MockMvcResultHandlers.print())
+                //then:
+                .andExpect(status().isOk())
+                .andExpect(content().string(is("Bicycle booking added.")));
+    }
+
+    @Test
+    public void addBookingShouldReturnBadRequestAndContentWithMessage() throws Exception {
+        // given:
+        Mockito.when(customerService.addBooking(bookingParameters)).thenReturn(false);
+
+        // when:
+        mvc.perform(put(PATH + "booking")
+                .content(getJsonFormatStringForBookingParameters(bookingParameters))
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+                .andDo(MockMvcResultHandlers.print())
+                //then:
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string(is("Error while adding bicycle booking. Provided data incorrect.")));
+    }
 
     private Customer getFirstTestCustomer() {
         Address address = Address.builder()
