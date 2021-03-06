@@ -19,15 +19,22 @@ import java.util.Optional;
 @Service
 public class BicycleServiceImpl implements BicycleService {
 
-    private BicycleDAO bicycleDAO;
-
     private static final String END_DATE_IS_AFTER_START_DATE = "End date is after start date.";
 
     private static final String BICYCLE_UNAVAILABLE = "Bicycle unavailable.";
 
     @Autowired
+    private BicycleDAO bicycleDAO;
+
+    @Autowired
     public BicycleServiceImpl(BicycleDAO bicycleDAO) {
         this.bicycleDAO = bicycleDAO;
+    }
+
+    @Override
+    public boolean bicycleAvailable(String id, LocalDate startDate, LocalDate endDate) {
+        validateBookingDates(startDate, endDate);
+        return bicycleDAO.bicycleAvailable(id, startDate, endDate);
     }
 
     @Override
@@ -41,23 +48,35 @@ public class BicycleServiceImpl implements BicycleService {
     }
 
     @Override
-    public List<Bicycle> getBicyclesByTypeSize(String type, String size) {
-        return bicycleDAO.getBicyclesByTypeSize(type, size);
-    }
-
-    @Override
     public boolean bookBicycle(BookingParameters bookingParameters) {
-        validateBookingDates(bookingParameters);
+        validateBookingDates(bookingParameters.getStartDate(), bookingParameters.getEndDate());
 
-        if (!getBicycleById(bookingParameters.getBicycleId()).isPresent()) {
+        Optional<Bicycle> bicycle = getBicycleById(bookingParameters.getBicycleId());
+        if (!bicycle.isPresent()) {
             return false;
         }
+        //TODO
+        checkBicycleBookings(bicycle.get(), bookingParameters);
+        addNewBooking(bicycle.get(), bookingParameters);
+        return bicycleDAO.bookBicycle(bicycle.get());
+    }
 
-        Bicycle bicycle = getBicycleById(bookingParameters.getBicycleId()).get();
-        BookingPeriod bookingPeriod = new BookingPeriod(bookingParameters.getStartDate(), bookingParameters.getEndDate());
 
+    private void checkBicycleBookings(Bicycle bicycle, BookingParameters bookingParameters) {
         Map<String, List<BookingPeriod>> bicycleBookings = bicycle.getBookings();
-        if(bicycleBookings == null || bicycleBookings.isEmpty()) {
+        if (bicycleBookings == null || bicycleBookings.isEmpty()) {
+            bicycle.setBookings(new HashMap<>());
+        } else {
+            if (!bicycleAvailable(bookingParameters.getBicycleId(), bookingParameters.getStartDate(),
+                    bookingParameters.getEndDate())) {
+                throw new BadRequest(BICYCLE_UNAVAILABLE);
+            }
+        }
+    }
+
+    private void addNewBooking(Bicycle bicycle, BookingParameters bookingParameters) {
+        Map<String, List<BookingPeriod>> bicycleBookings = bicycle.getBookings();
+        if (bicycleBookings == null || bicycleBookings.isEmpty()) {
             bicycle.setBookings(new HashMap<>());
         } else {
             if (!bicycleAvailable(bookingParameters.getBicycleId(), bookingParameters.getStartDate(),
@@ -66,20 +85,19 @@ public class BicycleServiceImpl implements BicycleService {
             }
         }
 
+        BookingPeriod bookingPeriod = new BookingPeriod(bookingParameters.getStartDate(), bookingParameters.getEndDate());
         List<BookingPeriod> customerBookings = bicycle.getBookings().get(bookingParameters.getUserId());
-        if(customerBookings == null || customerBookings.isEmpty()) {
+        if (customerBookings == null || customerBookings.isEmpty()) {
             bicycle.getBookings().put(bookingParameters.getUserId(), new ArrayList<>(Arrays.asList(bookingPeriod)));
         } else {
             customerBookings.add(bookingPeriod);
             bicycle.getBookings().put(bookingParameters.getBicycleId(), customerBookings);
         }
-
-        return bicycleDAO.bookBicycle(bicycle);
     }
 
     @Override
-    public boolean bicycleAvailable(String id, LocalDate startDate, LocalDate endDate) {
-        return bicycleDAO.bicycleAvailable(id, startDate, endDate);
+    public List<Bicycle> getBicyclesByTypeSize(String type, String size) {
+        return bicycleDAO.getBicyclesByTypeSize(type, size);
     }
 
     @Override
@@ -87,10 +105,10 @@ public class BicycleServiceImpl implements BicycleService {
         return bicycleDAO.addBicycle(bicycle);
     }
 
-    private void validateBookingDates(BookingParameters bookingParameters) {
-        if(bookingParameters.getStartDate().isAfter(bookingParameters.getEndDate())) {
+    private void validateBookingDates(LocalDate startDate, LocalDate endDate) {
+        if (startDate.isAfter(endDate)) {
             throw new BadRequest(END_DATE_IS_AFTER_START_DATE);
-        };
+        }
     }
 
     public BicycleDAO getBicycleDAO() {

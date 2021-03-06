@@ -5,6 +5,7 @@ import com.ledzion.bicycleservice.model.Bicycle;
 import com.ledzion.bicycleservice.model.BookingPeriod;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
@@ -15,27 +16,27 @@ import java.util.Optional;
 
 @Repository
 @ConditionalOnProperty(name = "com.ledzion.bicycleservice.BicycleDAO", havingValue = "MongoDb")
-public class BicycleMongoDbDAOImpl implements  BicycleDAO{
+public class BicycleMongoDbDAOImpl implements BicycleDAO {
 
     private static final String WRONG_BICYCLE_ID_PROVIDED = "Wrong bicycle Id provided.";
+
+    @Autowired
+    private LocalDateToDateConverter localDateToDateConverter;
+
+    @Autowired
+    private MongoTemplate mongoTemplate;
 
     @Autowired
     private BicycleMongoDbRepository bicycleMongoDbRepository;
 
     @Override
-    public List<Bicycle> getAllBicycles() {
-        return bicycleMongoDbRepository.findAll();
-    }
-
-    //TODO
-    @Override
     public boolean bicycleAvailable(String id, LocalDate startDate, LocalDate endDate) {
         Optional<Bicycle> bicycle = getBicycleById(id);
-        if(!bicycle.isPresent()) {
+        if (!bicycle.isPresent()) {
             throw new BadRequest(WRONG_BICYCLE_ID_PROVIDED);
         }
         Map<String, List<BookingPeriod>> bookings = bicycle.get().getBookings();
-        if(bookings == null || bookings.isEmpty()) {
+        if (bookings == null || bookings.isEmpty()) {
             return true;
         }
         return bookings.values().stream()
@@ -50,23 +51,24 @@ public class BicycleMongoDbDAOImpl implements  BicycleDAO{
     }
 
     @Override
+    public List<Bicycle> getAllBicycles() {
+        return bicycleMongoDbRepository.findAll();
+    }
+
+    @Override
     public boolean bookBicycle(Bicycle bicycle) {
         return bicycleMongoDbRepository.save(bicycle).equals(bicycle);
     }
 
     @Override
     public List<Bicycle> getBicyclesByTypeSize(String type, String size) {
-        if(type == null) {
-            if(size == null) {
-                return bicycleMongoDbRepository.findAll();
-            } else {
-                return bicycleMongoDbRepository.findBySize(size);
-            }
-        }
-        if(size == null) {
-            return bicycleMongoDbRepository.findByType(type);
-        }
-        return bicycleMongoDbRepository.findByTypeAndSize(type, size);
+        return type == null ?
+                    size == null ?
+                        bicycleMongoDbRepository.findAll()
+                        : bicycleMongoDbRepository.findBySize(size)
+                    : size == null ?
+                        bicycleMongoDbRepository.findByType(type)
+                        : bicycleMongoDbRepository.findByTypeAndSize(type, size);
     }
 
     @Override

@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-@FeignClient(name="customer-service")
+@FeignClient(name = "customer-service")
 public interface CustomerServiceProxy {
 
     @GetMapping("/customers/{id}")

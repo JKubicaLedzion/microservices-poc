@@ -14,7 +14,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @EnableEurekaClient
 public class BicycleServiceApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(BicycleServiceApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(BicycleServiceApplication.class, args);
+    }
 }
