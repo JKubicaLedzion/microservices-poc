@@ -24,13 +24,13 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @RibbonClients(defaultConfiguration = RibbonConfiguration.class)
 public class BookingServiceApplication {
 
+    public static void main(String[] args) {
+        SpringApplication.run(BookingServiceApplication.class, args);
+    }
+
     @Bean
     @LoadBalanced
     public RestTemplate restTemplate() {
         return new RestTemplate();
-    }
-
-    public static void main(String[] args) {
-        SpringApplication.run(BookingServiceApplication.class, args);
     }
 }

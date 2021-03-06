@@ -10,7 +10,7 @@ import java.util.Optional;
 
 @Repository
 @ConditionalOnProperty(name = "com.ledzion.customerservice.CustomerDAO", havingValue = "MongoDb")
-public class CustomerMongoDbDAOImpl implements  CustomerDAO{
+public class CustomerMongoDbDAOImpl implements CustomerDAO {
 
     @Autowired
     private CustomerMongoDbRepository customerMongoDbRepository;

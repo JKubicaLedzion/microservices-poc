@@ -11,15 +11,11 @@ import java.util.List;
 @Component
 public interface BicycleMongoDbRepository extends MongoRepository<Bicycle, String> {
 
-    @Query(" { '$or' : [ { 'type' : ?0 } , { 'type' : ?1 } ] }")
-    public List<Bicycle> findUsingQuery(String type, String size);
-
     public List<Bicycle> findByTypeAndSize(String type, String size);
 
     public List<Bicycle> findByType(String type);
 
     public List<Bicycle> findBySize(String size);
 
-    @Query("{ id : ?0 }")
-    public List<Bicycle> bicycleAvailable(String id, LocalDate startDate, LocalDate endDate);
+//    public List<Bicycle> bicycleAvailable(String id, LocalDate startDate, LocalDate endDate);
 }

@@ -13,7 +13,6 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -26,19 +25,16 @@ public class BicycleService {
     private RestTemplate restTemplate;
 
     public List<Bicycle> getBicyclesByTypeSize(String type, String size) {
-        List<Bicycle> bicycles = new ArrayList<>();
         try {
-            bicycles = restTemplate.exchange(BICYCLE_SERVICE_URL + "filter?" + getFilterUrlPart(type, size),
+            return restTemplate.exchange(BICYCLE_SERVICE_URL + "filter?" + getFilterUrlPart(type, size),
                     HttpMethod.GET, null, new ParameterizedTypeReference<List<Bicycle>>() {
                     }).getBody();
         } catch (final HttpClientErrorException e) {
             if (e.getStatusCode().equals(HttpStatus.NOT_FOUND)) {
                 throw new BadRequest(e.getResponseBodyAsString());
             }
-        } catch (final Exception e) {
             throw new ServiceException(e.getMessage());
         }
-        return bicycles;
     }
 
     public boolean bicycleAvailable(String id, LocalDate startDate, LocalDate endDate) {
@@ -50,26 +46,22 @@ public class BicycleService {
             if (e.getStatusCode().equals(HttpStatus.NOT_FOUND)) {
                 throw new BadRequest(e.getResponseBodyAsString());
             }
-        } catch (final Exception e) {
-            throw new ServiceException(e.getMessage());
         }
         return false;
     }
 
     public void addBooking(BookingParameters bookingParameters) {
         try {
-            restTemplate.put( BICYCLE_SERVICE_URL + "booking", bookingParameters);
-        } catch(final HttpClientErrorException e) {
-            if(e.getStatusCode().equals(HttpStatus.BAD_REQUEST)) {
+            restTemplate.put(BICYCLE_SERVICE_URL + "booking", bookingParameters);
+        } catch (final HttpClientErrorException e) {
+            if (e.getStatusCode().equals(HttpStatus.BAD_REQUEST)) {
                 throw new BadRequest(e.getResponseBodyAsString());
             }
-        } catch (final Exception e) {
-            throw new ServiceException(e.getMessage());
         }
     }
 
     private String getFilterUrlPart(String type, String size) {
-        if(Objects.isNull(type)){
+        if (Objects.isNull(type)) {
             return Objects.isNull(size) ? "" : "size=" + size;
         }
         return "type=" + type + (Objects.isNull(size) ? "" : "&size=" + size);

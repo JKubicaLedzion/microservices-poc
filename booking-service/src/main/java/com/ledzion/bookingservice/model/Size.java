@@ -14,14 +14,14 @@ public enum Size {
         this.sizeDescription = sizeDescription;
     }
 
-    public String getSizeDescription() {
-        return sizeDescription;
-    }
-
     public static Size getSize(String sizeDescription) {
         return Arrays.stream(Size.values())
                 .filter(s -> sizeDescription.equals(s.getSizeDescription()))
                 .findAny()
                 .orElseThrow(() -> new NoSuchElementException("Wrong size rate provided."));
+    }
+
+    public String getSizeDescription() {
+        return sizeDescription;
     }
 }
